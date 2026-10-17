@@ -60,7 +60,13 @@ export const seedDatabase = async () => {
     await product.save();
     console.log('[Seed] Created default Sathru Samhara Yagam product.');
   } else {
-    console.log('[Seed] Default product already exists.');
+    product.name = productData.name;
+    product.tamilTitle = productData.tamilTitle;
+    if (product.certificateConfig) {
+      product.certificateConfig.subtitle = productData.certificateConfig.subtitle;
+    }
+    await product.save();
+    console.log('[Seed] Updated existing product to Sathru Samhara Yagam.');
   }
 
   // 2. Seed initial Super Admin
