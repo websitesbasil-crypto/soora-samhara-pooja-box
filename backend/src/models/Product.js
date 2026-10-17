@@ -17,7 +17,7 @@ const TempleSchema = new mongoose.Schema({
 const ProductSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   slug: { type: String, required: true, unique: true, index: true, lowercase: true, trim: true },
-  tamilTitle: { type: String, default: 'சூரசம்ஹார பூஜை' },
+  tamilTitle: { type: String, default: 'சத்ரு சம்ஹார யாகம்' },
   description: { type: String, required: true },
   priceInPaise: { type: Number, required: true, min: 0 }, // e.g. 250000 = ₹2,500.00
   currency: { type: String, default: 'INR', uppercase: true },
@@ -34,7 +34,7 @@ const ProductSchema = new mongoose.Schema({
   certificateConfig: {
     authority: { type: String, default: 'Sri Sankara TV' },
     title: { type: String, default: 'Authentication Certificate' },
-    subtitle: { type: String, default: 'Soora Samhara Pooja 2026' },
+    subtitle: { type: String, default: 'Sathru Samhara Yagam 2026' },
     sealText: { type: String, default: 'வேல்' },
     caption: { type: String, default: 'Illustration of the certificate. Final design may differ.' },
     verificationPoints: {

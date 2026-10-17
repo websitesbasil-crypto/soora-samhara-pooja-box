@@ -8,16 +8,16 @@ Base URL: `/api/v1`
 
 ### 1.1 Get Active Product
 - **Endpoint:** `GET /products` or `GET /products/:slug`
-- **Description:** Retrieves the active Soora Samhara Pooja Box configuration, blessed contents, six-temple journey data, event details, and current server-side pricing.
+- **Description:** Retrieves the active Sathru Samhara Yagam configuration, blessed contents, six-temple journey data, event details, and current server-side pricing.
 - **Response (200 OK):**
 ```json
 {
   "success": true,
   "data": {
     "_id": "67b3...abc",
-    "name": "Soora Samhara Pooja Box",
+    "name": "Sathru Samhara Yagam",
     "slug": "soora-samhara-pooja-box-2026",
-    "tamilTitle": "சூரசம்ஹார பூஜை",
+    "tamilTitle": "சத்ரு சம்ஹார யாகம்",
     "description": "Six vibhuti from the Arupadai temples, a Murugan keepsake statue, a rudraksh bracelet and chandan...",
     "priceInPaise": 250000,
     "currency": "INR",
@@ -79,7 +79,7 @@ Base URL: `/api/v1`
     "amountInRupees": 5000,
     "currency": "INR",
     "keyId": "rzp_test_YourKeyId",
-    "productName": "Soora Samhara Pooja Box",
+    "productName": "Sathru Samhara Yagam",
     "quantity": 2,
     "customer": { "name": "Sundaram Iyer", "phone": "9840123456" }
   }

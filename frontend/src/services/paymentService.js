@@ -10,7 +10,7 @@ export const paymentService = {
     amount,
     currency = 'INR',
     name = 'Sri Sankara TV',
-    description = 'Soora Samhara Pooja Box 2026',
+    description = 'Sathru Samhara Yagam 2026',
     orderId,
     prefill = {},
     theme = { color: '#2F0A12' },

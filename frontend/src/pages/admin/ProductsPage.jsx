@@ -70,7 +70,7 @@ export const ProductsPage = () => {
           Product & Pricing Management
         </h1>
         <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: 4 }}>
-          Update the official Soora Samhara Pooja Box price, contents, and event details.
+          Update the official Sathru Samhara Yagam price, contents, and event details.
         </p>
       </div>
 

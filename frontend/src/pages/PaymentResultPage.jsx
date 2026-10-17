@@ -50,7 +50,7 @@ export const PaymentResultPage = () => {
                 Vetrivel Muruganukku Harohara
               </h1>
               <p className="lede" style={{ margin: '14px auto 24px', maxWidth: 480 }}>
-                Thank you for reserving the sacred <strong>Soora Samhara Pooja Box 2026</strong>. Your transaction has been verified.
+                Thank you for reserving the sacred <strong>Sathru Samhara Yagam 2026</strong>. Your transaction has been verified.
               </p>
 
               {orderDetails && (

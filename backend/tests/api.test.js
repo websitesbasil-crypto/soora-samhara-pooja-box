@@ -38,7 +38,7 @@ describe('Sri Sankara TV E-Commerce Comprehensive Backend Test Suite', () => {
     const res = await request(app).get('/api/v1/products');
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
-    expect(res.body.data.name).toBe('Soora Samhara Pooja Box');
+    expect(res.body.data.name).toBe('Sathru Samhara Yagam');
     expect(res.body.data.priceInPaise).toBe(250000); // ₹2,500
     expect(res.body.data.currency).toBe('INR');
   });

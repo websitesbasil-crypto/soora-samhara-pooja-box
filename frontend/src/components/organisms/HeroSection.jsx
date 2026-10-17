@@ -37,10 +37,10 @@ export const HeroSection = ({
         <div className="hero-grid">
           {/* Left Column (approx 45%): Editorial Devotional Typography & Actions */}
           <div className="hero-content">
-            <Eyebrow>Arupadai Veedu · Soora Samhara 2026</Eyebrow>
-            <TamilText>சூரசம்ஹார பூஜை</TamilText>
+            <Eyebrow>Arupadai Veedu · Sathru Samhara 2026</Eyebrow>
+            <TamilText>சத்ரு சம்ஹார யாகம்</TamilText>
             <h1 className="hero-heading">
-              Soora Samhara<br />Pooja Box
+              Sathru Samhara<br />Yagam
             </h1>
             <p className="hero-sub">
               Six vibhuti from the Arupadai temples, a Murugan keepsake statue, a rudraksh bracelet and chandan. The box travels to all six temples and to the final Yaagam at {eventLocation} on {eventDateFormatted.split(' ')[0]} {eventDateFormatted.split(' ')[1]}, and comes to you with its authentication certificate.
@@ -79,7 +79,7 @@ export const HeroSection = ({
           <div className="hero-product-stage">
             <img
               src={product?.imageUrl || "/Luxury Maroon Murugan Pooja Kit.png"}
-              alt="Sri Sankara TV Soora Samhara Pooja Box 2026 - Sanctified kit featuring Lord Murugan statue, 6 Arupadai vibhuti tins, rudraksh bracelet, chandan and final Yaagam box"
+              alt="Sri Sankara TV Sathru Samhara Yagam 2026 - Sanctified kit featuring Lord Murugan statue, 6 Arupadai vibhuti tins, rudraksh bracelet, chandan and final Yaagam box"
               className="hero-box-img"
               width="1024"
               height="1152"

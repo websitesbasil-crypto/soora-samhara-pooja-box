@@ -10,9 +10,9 @@ The platform utilizes MongoDB via Mongoose with strict schema validation, intege
 ### 2.1 Products (`products`)
 Stores the master product catalog, sacred item lists, pilgrimage temples, and pricing.
 - `_id`: ObjectId
-- `name`: String (e.g. "Soora Samhara Pooja Box")
+- `name`: String (e.g. "Sathru Samhara Yagam")
 - `slug`: String (unique index, e.g. "soora-samhara-pooja-box-2026")
-- `tamilTitle`: String ("சூரசம்ஹார பூஜை")
+- `tamilTitle`: String ("சத்ரு சம்ஹார யாகம்")
 - `description`: String
 - `priceInPaise`: Number (e.g. 250000 = ₹2,500.00)
 - `currency`: String ("INR")

@@ -136,7 +136,7 @@ export default function SettingsPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => handleSave('countdown_target_date', formData.countdown_target_date, 'Target date for live countdown to Soora Samhara Yaagam')}
+                  onClick={() => handleSave('countdown_target_date', formData.countdown_target_date, 'Target date for live countdown to Sathru Samhara Yaagam')}
                   disabled={savingKey === 'countdown_target_date'}
                   className="admin-btn-primary inline-flex items-center gap-1.5 px-4"
                 >

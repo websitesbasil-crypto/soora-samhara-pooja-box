@@ -65,7 +65,7 @@ This produces an optimized, minified bundle in `frontend/dist/`.
 ```bash
 npm run seed
 ```
-Creates default Soora Samhara Pooja Box catalog item, default Super Admin staff user, and configuration parameters.
+Creates default Sathru Samhara Yagam catalog item, default Super Admin staff user, and configuration parameters.
 
 ### Step 4: Run Tests
 ```bash

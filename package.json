@@ -1,7 +1,7 @@
 {
   "name": "sri-sankara-commerce",
   "version": "1.0.0",
-  "description": "Production-ready full-stack e-commerce platform for Sri Sankara TV – Soora Samhara Pooja Box 2026",
+  "description": "Production-ready full-stack e-commerce platform for Sri Sankara TV – Sathru Samhara Yagam 2026",
   "private": true,
   "scripts": {
     "dev": "concurrently --names \"API,WEB,ADM\" -c \"blue.bold,magenta.bold,yellow.bold\" \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:admin\"",

@@ -149,7 +149,7 @@ export const MyOrdersModal = () => {
             <div style={{ textAlign: 'center', padding: '48px 16px', color: '#6A5750' }}>
               <p style={{ fontSize: '1.1rem', margin: '0 0 8px' }}>No orders placed yet.</p>
               <p style={{ fontSize: '0.85rem', margin: 0 }}>
-                Reserve your Soora Samhara Pooja Box today to receive blessings from all six Arupadai Veedu temples.
+                Reserve your Sathru Samhara Yagam today to receive blessings from all six Arupadai Veedu temples.
               </p>
             </div>
           ) : (

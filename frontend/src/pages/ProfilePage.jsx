@@ -97,7 +97,7 @@ export const ProfilePage = () => {
           <Eyebrow>Devotee Sanctuary</Eyebrow>
           <Title>My Profile & Pooja Box Bookings</Title>
           <Lede style={{ margin: '10px auto', maxWidth: '640px' }}>
-            View all your booked Soora Samhara Pooja Boxes, live temple travel updates, payment receipts, and courier dispatches directly from the sacred registry.
+            View all your booked Sathru Samhara Yagam offerings, live temple travel updates, payment receipts, and courier dispatches directly from the sacred registry.
           </Lede>
         </div>
 
@@ -420,7 +420,7 @@ export const ProfilePage = () => {
                     >
                       <div>
                         <span style={{ color: 'var(--muted)', fontSize: '0.78rem', textTransform: 'uppercase', display: 'block' }}>Offering Item</span>
-                        <strong style={{ color: 'var(--head)' }}>{ord.productName || 'Soora Samhara Pooja Box 2026'}</strong>
+                        <strong style={{ color: 'var(--head)' }}>{ord.productName || 'Sathru Samhara Yagam 2026'}</strong>
                         <span style={{ display: 'block', color: 'var(--gold)', fontSize: '0.82rem' }}>Quantity: {ord.quantity} box{ord.quantity > 1 ? 'es' : ''}</span>
                       </div>
 

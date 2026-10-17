@@ -33,7 +33,7 @@ export const CustomersPage = () => {
           Devotee & Customer Directory
         </h1>
         <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: 4 }}>
-          Profiles and order history of devotees participating in Soora Samhara 2026.
+          Profiles and order history of devotees participating in Sathru Samhara 2026.
         </p>
       </div>
 

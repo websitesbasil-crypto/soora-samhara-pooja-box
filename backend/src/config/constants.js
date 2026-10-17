@@ -35,7 +35,7 @@ export const EMAIL_TEMPLATES = {
 };
 
 export const DEFAULT_PRODUCT = {
-  name: 'Soora Samhara Pooja Box',
+  name: 'Sathru Samhara Yagam',
   slug: 'soora-samhara-pooja-box-2026',
   priceInPaise: 250000, // ₹2,500
   currency: 'INR',
@@ -43,5 +43,5 @@ export const DEFAULT_PRODUCT = {
   minQuantityPerOrder: 1,
   eventDate: '2026-11-15T00:00:00+05:30',
   eventLocation: 'Thiruttani',
-  eventTamilTitle: 'சூரசம்ஹார பூஜை'
+  eventTamilTitle: 'சத்ரு சம்ஹார யாகம்'
 };

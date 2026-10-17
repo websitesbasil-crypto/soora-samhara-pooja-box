@@ -504,7 +504,7 @@ export const OrdersPage = () => {
               </h4>
               <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 8, borderBottom: '1px solid #f1f5f9' }}>
                 <div>
-                  <strong>Sri Sankara TV – Soora Samhara Pooja Box 2026</strong>
+                  <strong>Sri Sankara TV – Sathru Samhara Yagam 2026</strong>
                   <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Includes 6 Vibhuti packets, Murugan idol, Rudraksh, Chandan & Certificate</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>

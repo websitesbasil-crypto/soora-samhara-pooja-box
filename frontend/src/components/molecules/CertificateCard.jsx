@@ -3,7 +3,7 @@ import React from 'react';
 export const CertificateCard = ({
   authority = 'Sri Sankara TV',
   title = 'Authentication Certificate',
-  subtitle = 'Soora Samhara Pooja 2026',
+  subtitle = 'Sathru Samhara Yagam 2026',
   sealText = 'வேல்',
   caption = 'Illustration of the certificate. Final design may differ.'
 }) => {
