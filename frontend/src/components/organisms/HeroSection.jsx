@@ -40,21 +40,33 @@ export const HeroSection = ({
             <Eyebrow>Arupadai Veedu · Sathru Samhara 2026</Eyebrow>
             <TamilText>{product?.tamilTitle || 'சத்ரு சம்ஹார மகா யாகம்'}</TamilText>
             <h1 className="hero-heading">
-              {product?.name ? (
-                product.name.includes(' ') ? (
-                  <>
-                    {product.name.substring(0, product.name.lastIndexOf(' '))}
-                    <br />
-                    {product.name.substring(product.name.lastIndexOf(' ') + 1)}
-                  </>
-                ) : (
-                  product.name
-                )
-              ) : (
-                <>
-                  Sathru Samhara<br />Maha Yagam
-                </>
-              )}
+              {(() => {
+                const name = product?.name || 'Sathru Samhara Maha Yagam';
+                if (name.includes('\n')) {
+                  return name.split('\n').map((line, idx) => (
+                    <span key={idx} style={{ display: 'block' }}>{line}</span>
+                  ));
+                }
+                const words = name.trim().split(/\s+/);
+                if (words.length === 4) {
+                  return (
+                    <>
+                      <span style={{ display: 'block' }}>{words.slice(0, 2).join(' ')}</span>
+                      <span style={{ display: 'block' }}>{words.slice(2).join(' ')}</span>
+                    </>
+                  );
+                }
+                if (words.length >= 2) {
+                  const mid = Math.ceil(words.length / 2);
+                  return (
+                    <>
+                      <span style={{ display: 'block' }}>{words.slice(0, mid).join(' ')}</span>
+                      <span style={{ display: 'block' }}>{words.slice(mid).join(' ')}</span>
+                    </>
+                  );
+                }
+                return <span style={{ display: 'block' }}>{name}</span>;
+              })()}
             </h1>
             <p className="hero-sub">
               {product?.description || "A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering."}
