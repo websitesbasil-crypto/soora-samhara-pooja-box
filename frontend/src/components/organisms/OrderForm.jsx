@@ -8,7 +8,6 @@ import { Button } from '../atoms/Button';
 import { orderService } from '../../services/orderService';
 import { paymentService } from '../../services/paymentService';
 import { useCustomerAuth } from '../../context/CustomerAuthContext';
-import { NAKSHATRAS } from '../../constants/nakshatras';
 
 export const OrderForm = ({ product, settings }) => {
   const navigate = useNavigate();
@@ -560,19 +559,15 @@ export const OrderForm = ({ product, settings }) => {
                           <label htmlFor={`sankalpam-star-${idx}`} style={{ fontSize: '0.85rem' }}>
                             Natchathiram (Birth Star)
                           </label>
-                          <select
+                          <input
                             id={`sankalpam-star-${idx}`}
+                            type="text"
+                            placeholder="e.g. Rohini / ரோகிணி"
                             value={person.natchathiram}
                             onChange={(e) => handleSankalpamChange(idx, 'natchathiram', e.target.value)}
+                            maxLength={50}
                             style={{ minHeight: 44, padding: '8px 12px', fontSize: '0.92rem' }}
-                          >
-                            <option value="">Select Natchathiram / நட்சத்திரம்</option>
-                            {NAKSHATRAS.map((star) => (
-                              <option key={star} value={star}>
-                                {star}
-                              </option>
-                            ))}
-                          </select>
+                          />
                         </div>
                       </div>
                     </div>
