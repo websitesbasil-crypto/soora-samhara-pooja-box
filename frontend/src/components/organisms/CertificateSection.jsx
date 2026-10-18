@@ -23,7 +23,7 @@ export const CertificateSection = ({ config, productName }) => {
           <Eyebrow>Proof that it is genuine</Eyebrow>
           <Title>Every box carries a certificate</Title>
           <Lede>
-            Your box is not a catalogue item. It is the same box that went to the six temples and to the Yaagam, and the certificate says so.
+            This is no ordinary offering. Your sacred box accompanies the divine pilgrimage to all six Arupadai Veedu and the Sathru Samhara Maha Yagam at Thiruttani, arriving with an authentication certificate that honours its sacred journey.
           </Lede>
           <ul className="checks">
             {points.map((point, index) => (

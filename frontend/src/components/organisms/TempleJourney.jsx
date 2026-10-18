@@ -9,9 +9,9 @@ export const TempleJourney = ({ temples = [] }) => {
     <section className="band temples" id="temples">
       <div className="wrap">
         <Eyebrow>The journey</Eyebrow>
-        <Title>Six temples, one Yaagam</Title>
+        <Title>Six temples, one Maha Yaagam</Title>
         <Lede>
-          The box visits all six Arupadai Veedu temples, then reaches Thiruttani for the final Yaagam on 15 November.
+          The sacred box journeys through all six Arupadai Veedu, culminating in the divine grace of the Sathru Samhara Maha Yagam
         </Lede>
         <div className="temple-grid">
           {templeList.length === 0 ? (
