@@ -1,6 +1,6 @@
-# Sri Sankara TV — Sathru Samhara Yagam 2026 E-Commerce Platform
+# Sri Sankara TV — Sathru Samhara Maha Yagam 2026 E-Commerce Platform
 
-A production-ready, full-stack e-commerce application converted from the official **Sri Sankara TV – Sathru Samhara Yagam 2026** landing page. Built with **three clearly separated parts: Customer Frontend, Shared Backend API, and Independent Super Admin Portal**.
+A production-ready, full-stack e-commerce application converted from the official **Sri Sankara TV – Sathru Samhara Maha Yagam 2026** landing page. Built with **three clearly separated parts: Customer Frontend, Shared Backend API, and Independent Super Admin Portal**.
 
 - **Customer Frontend (`frontend/`):** React 18 + Vite SPA, Atomic Design methodology
 - **Shared Backend API (`backend/`):** Node.js, Express.js REST API, MongoDB with Mongoose
@@ -197,5 +197,5 @@ When the database is initialized or seeded, the default Super Admin user is prov
 
 ## 🕉️ Devotional Note
 
-*சத்ரு சம்ஹார யாகம் 2026 · Arupadai Veedu to the Thiruttani Final Yaagam, 15 November 2026.*  
+*சத்ரு சம்ஹார மஹா யாகம் 2026 · Arupadai Veedu to the Thiruttani Final Yaagam, 15 November 2026.*  
 *Sri Sankara TV Devotional E-Commerce Team.*

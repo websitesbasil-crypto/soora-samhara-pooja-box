@@ -15,7 +15,7 @@ class BrevoService {
 
     this.isConfigured = Boolean(
       process.env.NODE_ENV !== 'test' &&
-      this.apiKey && 
+      this.apiKey &&
       !this.apiKey.includes('your-brevo-api-key')
     );
 
@@ -123,16 +123,16 @@ class BrevoService {
       return null;
     }
 
-    const subject = `Order Confirmed: Sri Sankara TV Sathru Samhara Yagam (${order.orderNumber})`;
+    const subject = `Order Confirmed: Sri Sankara TV Sathru Samhara Maha Yagam (${order.orderNumber})`;
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #2B1B18; line-height: 1.6; border: 1px solid #E4D6BA; border-radius: 6px; overflow: hidden;">
         <div style="background-color: #2F0A12; color: #F6EBD6; padding: 24px; text-align: center;">
           <h1 style="color: #E4B655; margin: 0; font-size: 24px;">Sri Sankara TV</h1>
-          <p style="margin: 8px 0 0; color: #D8C3A5; font-size: 14px;">சத்ரு சம்ஹார யாகம் 2026</p>
+          <p style="margin: 8px 0 0; color: #D8C3A5; font-size: 14px;">சத்ரு சம்ஹார மஹா யாகம் 2026</p>
         </div>
         <div style="padding: 24px; background-color: #FAF4E8;">
           <h2 style="color: #4A0F1B; margin-top: 0;">Namaskaram ${order.customer.name},</h2>
-          <p>Thank you for reserving the blessed <strong>Sathru Samhara Yagam 2026</strong>. Your payment of <strong>${this.formatINR(order.totalAmountInPaise)}</strong> has been verified and confirmed.</p>
+          <p>Thank you for reserving the blessed <strong>Sathru Samhara Maha Yagam 2026</strong>. Your payment of <strong>${this.formatINR(order.totalAmountInPaise)}</strong> has been verified and confirmed.</p>
           
           <div style="background: #FFFFFF; border: 1px solid #E4D6BA; padding: 18px; border-radius: 4px; margin: 20px 0;">
             <p style="margin: 0 0 10px;"><strong>Order Number:</strong> ${order.orderNumber}</p>
@@ -173,7 +173,7 @@ class BrevoService {
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
         <h2 style="color: #4A0F1B;">New Verified Order Received</h2>
-        <p>A new order has been paid and verified for the Sathru Samhara Yagam 2026.</p>
+        <p>A new order has been paid and verified for the Sathru Samhara Maha Yagam 2026.</p>
         <ul>
           <li><strong>Order Number:</strong> ${order.orderNumber}</li>
           <li><strong>Customer:</strong> ${order.customer.name} (${order.customer.phone})</li>

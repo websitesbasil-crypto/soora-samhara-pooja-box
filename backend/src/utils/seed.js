@@ -14,9 +14,9 @@ export const seedDatabase = async () => {
   // 1. Seed or update Product
   let product = await Product.findOne({ slug: DEFAULT_PRODUCT.slug });
   const productData = {
-    name: 'Sathru Samhara Yagam',
+    name: 'Sathru Samhara Maha Yagam',
     slug: DEFAULT_PRODUCT.slug,
-    tamilTitle: 'சத்ரு சம்ஹார யாகம்',
+    tamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்',
     description: 'Six vibhuti from the Arupadai temples, a Murugan keepsake statue, a rudraksh bracelet and chandan. The box travels to all six temples and to the final Yaagam at Thiruttani on 15 November, and comes to you with its authentication certificate.',
     priceInPaise: 250000, // ₹2,500.00
     currency: 'INR',
@@ -44,7 +44,7 @@ export const seedDatabase = async () => {
     certificateConfig: {
       authority: 'Sri Sankara TV',
       title: 'Authentication Certificate',
-      subtitle: 'Sathru Samhara Yagam 2026',
+      subtitle: 'Sathru Samhara Maha Yagam 2026',
       sealText: 'வேல்',
       caption: 'Illustration of the certificate. Final design may differ.',
       verificationPoints: [
@@ -58,7 +58,7 @@ export const seedDatabase = async () => {
   if (!product) {
     product = new Product(productData);
     await product.save();
-    console.log('[Seed] Created default Sathru Samhara Yagam product.');
+    console.log('[Seed] Created default Sathru Samhara Maha Yagam product.');
   } else {
     product.name = productData.name;
     product.tamilTitle = productData.tamilTitle;
@@ -66,7 +66,7 @@ export const seedDatabase = async () => {
       product.certificateConfig.subtitle = productData.certificateConfig.subtitle;
     }
     await product.save();
-    console.log('[Seed] Updated existing product to Sathru Samhara Yagam.');
+    console.log('[Seed] Updated existing product to Sathru Samhara Maha Yagam.');
   }
 
   // 2. Seed initial Super Admin

@@ -423,6 +423,7 @@ h2.title {
 .hero-product-stage {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -452,6 +453,33 @@ h2.title {
 .hero-box-img:hover {
   transform: translateY(-4px) scale(1.01);
   filter: drop-shadow(0 40px 76px rgba(10, 2, 4, 0.95)) drop-shadow(0 0 60px rgba(214, 163, 66, 0.25));
+}
+
+.hero-image-disclaimer {
+  position: relative;
+  z-index: 2;
+  margin-top: 14px;
+  text-align: center;
+  max-width: 640px;
+  padding: 0 12px;
+}
+
+.hero-disclaimer-en {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #D8C3A5;
+  letter-spacing: 0.01em;
+  opacity: 0.9;
+  line-height: 1.45;
+}
+
+.hero-disclaimer-ta {
+  margin: 4px 0 0;
+  font-family: var(--font-tamil);
+  font-size: 0.82rem;
+  color: var(--gold-bright, #F2BC55);
+  opacity: 0.92;
+  line-height: 1.45;
 }
 
 /* ==========================================================================

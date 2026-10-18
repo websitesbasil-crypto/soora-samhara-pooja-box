@@ -15,7 +15,7 @@ export const CertificateSection = ({ config }) => {
         <CertificateCard
           authority={config?.authority || 'Sri Sankara TV'}
           title={config?.title || 'Authentication Certificate'}
-          subtitle={config?.subtitle || 'Sathru Samhara Yagam 2026'}
+          subtitle={config?.subtitle || 'Sathru Samhara Maha Yagam 2026'}
           sealText={config?.sealText || 'வேல்'}
           caption={config?.caption || 'Illustration of the certificate. Final design may differ.'}
         />

@@ -153,7 +153,7 @@ export const OrderForm = ({ product, settings }) => {
 
   const buildMessage = (orderNum = '') => {
     const lines = [
-      'Sathru Samhara Yagam – order request',
+      'Sathru Samhara Maha Yagam – order request',
       orderNum ? `Order Reference: ${orderNum}` : '',
       `Boxes: ${quantity}`,
       `Box total: ${inr(quantity * unitPrice)}`,
@@ -229,7 +229,7 @@ export const OrderForm = ({ product, settings }) => {
       amount: orderResponse.amountInPaise,
       currency: orderResponse.currency || 'INR',
       name: 'Sri Sankara TV',
-      description: `Sathru Samhara Yagam (${quantity} box${quantity > 1 ? 'es' : ''})`,
+      description: `Sathru Samhara Maha Yagam (${quantity} box${quantity > 1 ? 'es' : ''})`,
       orderId: orderResponse.razorpayOrderId,
       prefill: {
         name: formData.name,
@@ -287,7 +287,7 @@ export const OrderForm = ({ product, settings }) => {
             Choose how many boxes you want and share your delivery details. One standard box for every devotee, with the same contents.
           </Lede>
           <OrderSummary
-            productName={product?.name || 'Sathru Samhara Yagam'}
+            productName={product?.name || 'Sathru Samhara Maha Yagam'}
             quantity={quantity}
             unitPrice={unitPrice}
           />
@@ -320,7 +320,7 @@ export const OrderForm = ({ product, settings }) => {
                 Devotee Sign In Required
               </h3>
               <p style={{ color: 'var(--muted)', fontSize: '0.95rem', maxWidth: '44ch', margin: '0 auto 24px', lineHeight: 1.6 }}>
-                Lord Murugan’s Sathru Samhara Yagam is blessed in your name. Please sign in or create an account with your mobile number, email, and password to place your order.
+                Lord Murugan’s Sathru Samhara Maha Yagam is blessed in your name. Please sign in or create an account with your mobile number, email, and password to place your order.
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
                 <Button

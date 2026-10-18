@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const OrderSummary = ({
-  productName = 'Sathru Samhara Yagam',
+  productName = 'Sathru Samhara Maha Yagam',
   quantity = 1,
   unitPrice = 2500,
   className = ''

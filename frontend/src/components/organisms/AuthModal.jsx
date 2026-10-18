@@ -150,7 +150,7 @@ export const AuthModal = () => {
             fontSize: '0.95rem',
             margin: '0 0 4px'
           }}>
-            ஸ்ரீ சங்கரா டிவி · சத்ரு சம்ஹார யாகம்
+            ஸ்ரீ சங்கரா டிவி · சத்ரு சம்ஹார மஹா யாகம்
           </p>
           <h2 style={{
             fontFamily: 'var(--font-display, Georgia, serif)',
@@ -163,7 +163,7 @@ export const AuthModal = () => {
           </h2>
           <p style={{ fontSize: '0.85rem', color: '#D8C3A5', marginTop: 6 }}>
             {mode === 'login'
-              ? 'Sign in to reserve and track your blessed Sathru Samhara Yagam.'
+              ? 'Sign in to reserve and track your blessed Sathru Samhara Maha Yagam.'
               : 'Sign up with your email, mobile number and password to place your order.'}
           </p>
         </div>
