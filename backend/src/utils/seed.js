@@ -49,9 +49,14 @@ export const seedDatabase = async () => {
       caption: 'Illustration of the certificate. Final design may differ.',
       verificationPoints: [
         'Vibhuti sourced from the six Arupadai temples',
-        'Box taken to the final Yaagam at Thiruttani on 15 November',
+        'Box taken to the final Maha Yaagam at Thiruttani on 15 November',
         'Certificate issued by Sri Sankara TV, packed inside your box'
       ]
+    },
+    insideBoxConfig: {
+      eyebrow: 'Inside the box',
+      title: '',
+      description: 'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.'
     },
     contactConfig: {
       title: 'Contact Sri Sankara TV',
@@ -76,6 +81,9 @@ export const seedDatabase = async () => {
     product.description = productData.description;
     if (product.certificateConfig) {
       product.certificateConfig.subtitle = productData.certificateConfig.subtitle;
+    }
+    if (!product.insideBoxConfig) {
+      product.insideBoxConfig = productData.insideBoxConfig;
     }
     if (!product.contactConfig || !product.contactConfig.phone1) {
       product.contactConfig = productData.contactConfig;

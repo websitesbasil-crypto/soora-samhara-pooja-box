@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { adminService } from '../services/adminService';
 import Button from '../components/atoms/Button';
 import FormField from '../components/molecules/FormField';
-import { Save, Plus, Trash2 } from 'lucide-react';
+import { Save, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 
 export const ContentPage = () => {
   const [content, setContent] = useState(null);
@@ -41,6 +41,7 @@ export const ContentPage = () => {
           tamilTitle: content.product.tamilTitle,
           description: content.product.description,
           eventLocation: content.product.eventLocation,
+          insideBoxConfig: content.product.insideBoxConfig,
           contents: content.product.contents,
           temples: content.product.temples,
           certificateConfig: content.product.certificateConfig,
@@ -49,7 +50,8 @@ export const ContentPage = () => {
       });
 
       if (res.success) {
-        setMessage('Website content updated successfully! Public storefront updated.');
+        setMessage('Website content updated successfully! Public storefront is now live with your changes.');
+        setTimeout(() => setMessage(''), 6000);
       }
     } catch (err) {
       alert('Error updating content: ' + err.message);
@@ -58,21 +60,105 @@ export const ContentPage = () => {
     }
   };
 
+  // Blessed Contents Handlers
   const updateContentItem = (index, field, value) => {
-    const newItems = [...content.product.contents];
-    newItems[index][field] = value;
+    const newItems = [...(content.product.contents || [])];
+    newItems[index] = { ...newItems[index], [field]: value };
     setContent({
       ...content,
       product: { ...content.product, contents: newItems }
     });
   };
 
+  const addContentItem = () => {
+    const current = content.product.contents || [];
+    setContent({
+      ...content,
+      product: {
+        ...content.product,
+        contents: [...current, { qty: '1×', title: '', description: '' }]
+      }
+    });
+  };
+
+  const removeContentItem = (index) => {
+    const newItems = (content.product.contents || []).filter((_, i) => i !== index);
+    setContent({
+      ...content,
+      product: { ...content.product, contents: newItems }
+    });
+  };
+
+  // Pilgrimage Temples Handlers
   const updateTempleItem = (index, field, value) => {
-    const newTemples = [...content.product.temples];
-    newTemples[index][field] = value;
+    const newTemples = [...(content.product.temples || [])];
+    newTemples[index] = { ...newTemples[index], [field]: value };
     setContent({
       ...content,
       product: { ...content.product, temples: newTemples }
+    });
+  };
+
+  const addTempleItem = () => {
+    const current = content.product.temples || [];
+    setContent({
+      ...content,
+      product: {
+        ...content.product,
+        temples: [...current, { ta: '', en: '', where: '', flag: '', isFinal: false }]
+      }
+    });
+  };
+
+  const removeTempleItem = (index) => {
+    const newTemples = (content.product.temples || []).filter((_, i) => i !== index);
+    setContent({
+      ...content,
+      product: { ...content.product, temples: newTemples }
+    });
+  };
+
+  // Certificate Verification Points Handlers
+  const updateVerificationPoint = (index, value) => {
+    const newPoints = [...(content.product.certificateConfig?.verificationPoints || [])];
+    newPoints[index] = value;
+    setContent({
+      ...content,
+      product: {
+        ...content.product,
+        certificateConfig: {
+          ...content.product.certificateConfig,
+          verificationPoints: newPoints
+        }
+      }
+    });
+  };
+
+  const addVerificationPoint = () => {
+    const current = content.product.certificateConfig?.verificationPoints || [];
+    setContent({
+      ...content,
+      product: {
+        ...content.product,
+        certificateConfig: {
+          ...content.product.certificateConfig,
+          verificationPoints: [...current, '']
+        }
+      }
+    });
+  };
+
+  const removeVerificationPoint = (index) => {
+    const newPoints = (content.product.certificateConfig?.verificationPoints || []).filter((_, i) => i !== index);
+    setContent({
+      ...content,
+      product: {
+        ...content.product,
+        certificateConfig: {
+          ...content.product.certificateConfig,
+          verificationPoints: newPoints
+        }
+      }
     });
   };
 
@@ -92,13 +178,14 @@ export const ContentPage = () => {
       </div>
 
       {message && (
-        <div style={{ padding: 12, background: '#DCFCE7', color: '#166534', borderRadius: 4, marginBottom: 20 }}>
-          {message}
+        <div style={{ padding: '12px 16px', background: '#DCFCE7', border: '1px solid #86EFAC', color: '#166534', borderRadius: 6, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8, fontWeight: 500 }}>
+          <CheckCircle2 size={18} />
+          <span>{message}</span>
         </div>
       )}
 
       {product && (
-        <form onSubmit={handleSave} style={{ display: 'grid', gap: 24, maxWidth: 860 }}>
+        <form onSubmit={handleSave} style={{ display: 'grid', gap: 24, maxWidth: 900 }}>
           {/* Hero Section Content */}
           <div className="admin-card">
             <h3>Hero Section Headings</h3>
@@ -132,50 +219,206 @@ export const ContentPage = () => {
             </div>
           </div>
 
-          {/* Product Contents Section */}
+          {/* Product Contents Section ("Inside the Box") */}
           <div className="admin-card">
-            <h3>Inside the Box: 5 Blessed Items</h3>
-            <div style={{ display: 'grid', gap: 14 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Inside the Box: Blessed Items ({product.contents?.length || 0} Items)</h3>
+                <p style={{ fontSize: '0.85rem', color: '#64748B', marginTop: 2, marginBottom: 0 }}>
+                  Add, edit, or remove blessed items inside the Pooja Box. The storefront automatically displays all items.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={addContentItem}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '7px 14px',
+                  background: '#166534',
+                  color: '#FFFFFF',
+                  borderRadius: 6,
+                  border: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                <Plus size={16} /> Add Blessed Item
+              </button>
+            </div>
+
+            {/* Section Heading & Subtitle customization */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12, marginBottom: 16, background: '#F8FAFC', padding: 12, borderRadius: 8, border: '1px solid #E2E8F0' }}>
+              <FormField
+                id="inside-eyebrow"
+                label="Section Eyebrow"
+                value={product.insideBoxConfig?.eyebrow || 'Inside the box'}
+                onChange={(e) => setContent({
+                  ...content,
+                  product: {
+                    ...product,
+                    insideBoxConfig: { ...product.insideBoxConfig, eyebrow: e.target.value }
+                  }
+                })}
+                placeholder="Inside the box"
+              />
+              <FormField
+                id="inside-title"
+                label="Section Title (leave blank to auto-count items)"
+                value={product.insideBoxConfig?.title || ''}
+                onChange={(e) => setContent({
+                  ...content,
+                  product: {
+                    ...product,
+                    insideBoxConfig: { ...product.insideBoxConfig, title: e.target.value }
+                  }
+                })}
+                placeholder="e.g. Five things, blessed along the way (or leave blank)"
+              />
+              <div style={{ gridColumn: '1 / -1' }}>
+                <FormField
+                  id="inside-desc"
+                  label="Section Subtitle / Description"
+                  as="textarea"
+                  rows={2}
+                  value={product.insideBoxConfig?.description || ''}
+                  onChange={(e) => setContent({
+                    ...content,
+                    product: {
+                      ...product,
+                      insideBoxConfig: { ...product.insideBoxConfig, description: e.target.value }
+                    }
+                  })}
+                  placeholder="Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani."
+                />
+              </div>
+            </div>
+
+            {/* List of Blessed Items */}
+            <div style={{ display: 'grid', gap: 12 }}>
               {product.contents?.map((item, idx) => (
-                <div key={idx} style={{ display: 'grid', gridTemplateColumns: '80px 1.2fr 2fr', gap: 10, alignItems: 'center', background: '#F8FAFC', padding: 10, borderRadius: 6 }}>
+                <div
+                  key={idx}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '85px 1.2fr 2fr 40px',
+                    gap: 10,
+                    alignItems: 'center',
+                    background: '#FFFFFF',
+                    padding: '10px 12px',
+                    borderRadius: 6,
+                    border: '1px solid #CBD5E1'
+                  }}
+                >
                   <input
                     type="text"
                     value={item.qty}
                     onChange={(e) => updateContentItem(idx, 'qty', e.target.value)}
                     className="admin-input"
-                    placeholder="Qty (6×)"
+                    placeholder="Qty (1×)"
+                    title="Quantity badge"
+                    required
                   />
                   <input
                     type="text"
                     value={item.title}
                     onChange={(e) => updateContentItem(idx, 'title', e.target.value)}
                     className="admin-input"
-                    placeholder="Title"
+                    placeholder="Item Title (e.g. Rudraksh bracelet)"
+                    title="Item title"
+                    required
                   />
                   <input
                     type="text"
                     value={item.description}
                     onChange={(e) => updateContentItem(idx, 'description', e.target.value)}
                     className="admin-input"
-                    placeholder="Description"
+                    placeholder="Short description"
+                    title="Item description"
                   />
+                  <button
+                    type="button"
+                    onClick={() => removeContentItem(idx)}
+                    title="Remove item"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#EF4444',
+                      cursor: 'pointer',
+                      padding: 6,
+                      borderRadius: 4,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </div>
               ))}
+
+              {(!product.contents || product.contents.length === 0) && (
+                <div style={{ padding: 16, textAlign: 'center', color: '#64748B', background: '#F8FAFC', borderRadius: 6 }}>
+                  No items listed yet. Click "+ Add Blessed Item" to add your first item.
+                </div>
+              )}
             </div>
           </div>
 
           {/* Six Temple Journey */}
           <div className="admin-card">
-            <h3>Six-Temple Pilgrimage Cards</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Six-Temple Pilgrimage Cards ({product.temples?.length || 0} Temples)</h3>
+                <p style={{ fontSize: '0.85rem', color: '#64748B', marginTop: 2, marginBottom: 0 }}>
+                  Manage the sequence of temples visited by the sacred Pooja Box.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={addTempleItem}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '7px 14px',
+                  background: '#166534',
+                  color: '#FFFFFF',
+                  borderRadius: 6,
+                  border: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                <Plus size={16} /> Add Temple Card
+              </button>
+            </div>
+
             <div style={{ display: 'grid', gap: 10 }}>
               {product.temples?.map((temple, idx) => (
-                <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr 1fr', gap: 10, alignItems: 'center', background: '#F8FAFC', padding: 10, borderRadius: 6 }}>
+                <div
+                  key={idx}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1.2fr 1.2fr 1fr 1.2fr 80px 40px',
+                    gap: 10,
+                    alignItems: 'center',
+                    background: '#FFFFFF',
+                    padding: '10px 12px',
+                    borderRadius: 6,
+                    border: '1px solid #CBD5E1'
+                  }}
+                >
                   <input
                     type="text"
                     value={temple.ta}
                     onChange={(e) => updateTempleItem(idx, 'ta', e.target.value)}
                     className="admin-input"
                     placeholder="Tamil Name"
+                    required
                   />
                   <input
                     type="text"
@@ -183,6 +426,7 @@ export const ContentPage = () => {
                     onChange={(e) => updateTempleItem(idx, 'en', e.target.value)}
                     className="admin-input"
                     placeholder="English Name"
+                    required
                   />
                   <input
                     type="text"
@@ -190,14 +434,41 @@ export const ContentPage = () => {
                     onChange={(e) => updateTempleItem(idx, 'where', e.target.value)}
                     className="admin-input"
                     placeholder="Location / District"
+                    required
                   />
                   <input
                     type="text"
                     value={temple.flag || ''}
                     onChange={(e) => updateTempleItem(idx, 'flag', e.target.value)}
                     className="admin-input"
-                    placeholder="Flag text (if final)"
+                    placeholder="Flag text (e.g. Final Yaagam)"
                   />
+                  <label style={{ fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', color: '#475569' }}>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(temple.isFinal)}
+                      onChange={(e) => updateTempleItem(idx, 'isFinal', e.target.checked)}
+                    />
+                    Final?
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => removeTempleItem(idx)}
+                    title="Remove temple"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#EF4444',
+                      cursor: 'pointer',
+                      padding: 6,
+                      borderRadius: 4,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -205,7 +476,34 @@ export const ContentPage = () => {
 
           {/* Authentication Certificate */}
           <div className="admin-card">
-            <h3>Authentication Certificate Details</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Authentication Certificate Details</h3>
+                <p style={{ fontSize: '0.85rem', color: '#64748B', marginTop: 2, marginBottom: 0 }}>
+                  Customize the official authentication certificate details and verification points.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={addVerificationPoint}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '7px 14px',
+                  background: '#166534',
+                  color: '#FFFFFF',
+                  borderRadius: 6,
+                  border: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                <Plus size={16} /> Add Verification Point
+              </button>
+            </div>
+
             <div style={{ display: 'grid', gap: 14 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
                 <FormField
@@ -226,6 +524,45 @@ export const ContentPage = () => {
                   value={product.certificateConfig?.sealText || ''}
                   onChange={(e) => setContent({ ...content, product: { ...product, certificateConfig: { ...product.certificateConfig, sealText: e.target.value } } })}
                 />
+              </div>
+
+              {/* Verification Points List */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, color: '#475569', marginBottom: 8 }}>
+                  Certificate Verification Points ({product.certificateConfig?.verificationPoints?.length || 0})
+                </label>
+                <div style={{ display: 'grid', gap: 8 }}>
+                  {(product.certificateConfig?.verificationPoints || []).map((point, pIdx) => (
+                    <div key={pIdx} style={{ display: 'grid', gridTemplateColumns: '1fr 40px', gap: 8, alignItems: 'center' }}>
+                      <input
+                        type="text"
+                        value={point}
+                        onChange={(e) => updateVerificationPoint(pIdx, e.target.value)}
+                        className="admin-input"
+                        placeholder="e.g. Vibhuti sourced from the six Arupadai temples"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeVerificationPoint(pIdx)}
+                        title="Remove point"
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#EF4444',
+                          cursor: 'pointer',
+                          padding: 6,
+                          borderRadius: 4,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -302,8 +639,8 @@ export const ContentPage = () => {
             </div>
           </div>
 
-          <Button type="submit" loading={saving} style={{ width: 'max-content' }}>
-            <Save size={16} style={{ marginRight: 6 }} /> Publish Content Changes
+          <Button type="submit" loading={saving} style={{ width: 'max-content', padding: '12px 28px', fontSize: '1rem' }}>
+            <Save size={18} style={{ marginRight: 8 }} /> Publish Content Changes
           </Button>
         </form>
       )}

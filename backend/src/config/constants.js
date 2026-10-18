@@ -44,6 +44,11 @@ export const DEFAULT_PRODUCT = {
   eventDate: '2026-11-15T00:00:00+05:30',
   eventLocation: 'Thiruttani',
   eventTamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்',
+  insideBoxConfig: {
+    eyebrow: 'Inside the box',
+    title: '',
+    description: 'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.'
+  },
   contactConfig: {
     title: 'Contact Sri Sankara TV',
     tamilTitle: 'தொடர்புக்கு / உதவிக்கு',

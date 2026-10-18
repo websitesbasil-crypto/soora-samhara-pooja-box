@@ -53,7 +53,11 @@ export const HomePage = () => {
         eventLocation={product?.eventLocation || 'Thiruttani'}
         eventDateFormatted="15 November 2026"
       />
-      <ProductContents items={product?.contents} contactConfig={product?.contactConfig} />
+      <ProductContents
+        items={product?.contents}
+        contactConfig={product?.contactConfig}
+        insideBoxConfig={product?.insideBoxConfig}
+      />
       <TempleJourney temples={product?.temples} />
       <CertificateSection config={product?.certificateConfig} productName={product?.name} />
       <OrderForm product={product} settings={settings} />

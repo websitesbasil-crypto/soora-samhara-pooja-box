@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
 const ProductContentSchema = new mongoose.Schema({
-  qty: { type: String, required: true },
-  title: { type: String, required: true },
-  description: { type: String, required: true }
+  qty: { type: String, default: '1×' },
+  title: { type: String, default: '' },
+  description: { type: String, default: '' }
 }, { _id: false });
 
 const TempleSchema = new mongoose.Schema({
-  ta: { type: String, required: true },
-  en: { type: String, required: true },
-  where: { type: String, required: true },
+  ta: { type: String, default: '' },
+  en: { type: String, default: '' },
+  where: { type: String, default: '' },
   isFinal: { type: Boolean, default: false },
   flag: { type: String, default: null }
 }, { _id: false });
@@ -30,6 +30,14 @@ const ProductSchema = new mongoose.Schema({
   eventLocation: { type: String, default: 'Thiruttani' },
   imageUrl: { type: String, default: '/hero-product-kit.png' },
   contents: [ProductContentSchema],
+  insideBoxConfig: {
+    eyebrow: { type: String, default: 'Inside the box' },
+    title: { type: String, default: '' },
+    description: {
+      type: String,
+      default: 'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.'
+    }
+  },
   temples: [TempleSchema],
   certificateConfig: {
     authority: { type: String, default: 'Sri Sankara TV' },
@@ -41,7 +49,7 @@ const ProductSchema = new mongoose.Schema({
       type: [String],
       default: [
         'Vibhuti sourced from the six Arupadai temples',
-        'Box taken to the final Yaagam at Thiruttani on 15 November',
+        'Box taken to the final Maha Yaagam at Thiruttani on 15 November',
         'Certificate issued by Sri Sankara TV, packed inside your box'
       ]
     }

@@ -406,14 +406,30 @@ export const updateContent = async (req, res) => {
     let product = await Product.findOne({ isActive: true }) || await Product.findOne();
 
     if (productUpdates && product) {
-      if (productUpdates.name) product.name = productUpdates.name;
-      if (productUpdates.tamilTitle) product.tamilTitle = productUpdates.tamilTitle;
-      if (productUpdates.description) product.description = productUpdates.description;
-      if (productUpdates.eventLocation) product.eventLocation = productUpdates.eventLocation;
-      if (productUpdates.contents) product.contents = productUpdates.contents;
-      if (productUpdates.temples) product.temples = productUpdates.temples;
-      if (productUpdates.certificateConfig) product.certificateConfig = productUpdates.certificateConfig;
-      if (productUpdates.contactConfig) product.contactConfig = productUpdates.contactConfig;
+      if (productUpdates.name !== undefined) product.name = productUpdates.name;
+      if (productUpdates.tamilTitle !== undefined) product.tamilTitle = productUpdates.tamilTitle;
+      if (productUpdates.description !== undefined) product.description = productUpdates.description;
+      if (productUpdates.eventLocation !== undefined) product.eventLocation = productUpdates.eventLocation;
+      if (productUpdates.insideBoxConfig) {
+        product.insideBoxConfig = { ...product.insideBoxConfig, ...productUpdates.insideBoxConfig };
+        product.markModified('insideBoxConfig');
+      }
+      if (productUpdates.contents && Array.isArray(productUpdates.contents)) {
+        product.contents = productUpdates.contents;
+        product.markModified('contents');
+      }
+      if (productUpdates.temples && Array.isArray(productUpdates.temples)) {
+        product.temples = productUpdates.temples;
+        product.markModified('temples');
+      }
+      if (productUpdates.certificateConfig) {
+        product.certificateConfig = { ...product.certificateConfig, ...productUpdates.certificateConfig };
+        product.markModified('certificateConfig');
+      }
+      if (productUpdates.contactConfig) {
+        product.contactConfig = { ...product.contactConfig, ...productUpdates.contactConfig };
+        product.markModified('contactConfig');
+      }
       await product.save();
     }
 

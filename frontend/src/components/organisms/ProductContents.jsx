@@ -3,8 +3,27 @@ import { Eyebrow, Title, Lede } from '../atoms/Typography';
 import { Phone, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export const ProductContents = ({ items = [], contactConfig = null }) => {
+export const ProductContents = ({ items = [], contactConfig = null, insideBoxConfig = null }) => {
   const contentsList = Array.isArray(items) ? items : [];
+
+  const countWords = {
+    1: 'One thing',
+    2: 'Two things',
+    3: 'Three things',
+    4: 'Four things',
+    5: 'Five things',
+    6: 'Six things',
+    7: 'Seven things',
+    8: 'Eight things',
+    9: 'Nine things',
+    10: 'Ten things'
+  };
+
+  const dynamicCountTitle = `${countWords[contentsList.length] || `${contentsList.length} things`}, blessed along the way`;
+  const sectionTitle = insideBoxConfig?.title?.trim() || dynamicCountTitle;
+  const sectionEyebrow = insideBoxConfig?.eyebrow?.trim() || 'Inside the box';
+  const sectionDescription = insideBoxConfig?.description?.trim() ||
+    'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.';
 
   const phone1 = contactConfig?.phone1 || '95917 47001';
   const phone2 = contactConfig?.phone2 || '95917 47002';
@@ -17,10 +36,10 @@ export const ProductContents = ({ items = [], contactConfig = null }) => {
     <section className="band" id="inside">
       <div className="wrap inside-grid">
         <div>
-          <Eyebrow>Inside the box</Eyebrow>
-          <Title>Five things, blessed along the way</Title>
+          <Eyebrow>{sectionEyebrow}</Eyebrow>
+          <Title>{sectionTitle}</Title>
           <Lede>
-            Everything is packed as one box and travels together from temple to temple, ending at the Yaagam in Thiruttani.
+            {sectionDescription}
           </Lede>
         </div>
         <ul className="items">
