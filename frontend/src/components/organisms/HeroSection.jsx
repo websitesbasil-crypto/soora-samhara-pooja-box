@@ -38,12 +38,26 @@ export const HeroSection = ({
           {/* Left Column (approx 45%): Editorial Devotional Typography & Actions */}
           <div className="hero-content">
             <Eyebrow>Arupadai Veedu · Sathru Samhara 2026</Eyebrow>
-            <TamilText>சத்ரு சம்ஹார மகா யாகம்</TamilText>
+            <TamilText>{product?.tamilTitle || 'சத்ரு சம்ஹார மகா யாகம்'}</TamilText>
             <h1 className="hero-heading">
-              Sathru Samhara<br />Maha Yagam
+              {product?.name ? (
+                product.name.includes(' ') ? (
+                  <>
+                    {product.name.substring(0, product.name.lastIndexOf(' '))}
+                    <br />
+                    {product.name.substring(product.name.lastIndexOf(' ') + 1)}
+                  </>
+                ) : (
+                  product.name
+                )
+              ) : (
+                <>
+                  Sathru Samhara<br />Maha Yagam
+                </>
+              )}
             </h1>
             <p className="hero-sub">
-              Six vibhuti from the Arupadai temples, a Murugan keepsake statue, a rudraksh bracelet and chandan. The box travels to all six temples and to the final Yaagam at {eventLocation} on {eventDateFormatted.split(' ')[0]} {eventDateFormatted.split(' ')[1]}, and comes to you with its authentication certificate.
+              {product?.description || "A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering."}
             </p>
 
             <PriceDisplay amountInRupees={priceInRupees} note="per box, one standard box" />
@@ -68,7 +82,7 @@ export const HeroSection = ({
             <div className="countdown-box">
               <strong className="countdown-days">{label}</strong>
               <span className="countdown-sep" aria-hidden="true" />
-              <span className="countdown-meta">{eventDateFormatted} · {eventLocation}</span>
+              <span className="countdown-meta">{eventDateFormatted} · {product?.eventLocation || eventLocation}</span>
             </div>
 
             {/* Traditional 5-diamond antique gold kolam motif */}

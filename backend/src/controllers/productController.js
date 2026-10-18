@@ -4,7 +4,14 @@ import { DEFAULT_PRODUCT } from '../config/constants.js';
 
 export const getPublicProduct = async (req, res) => {
   try {
-    let product = await Product.findOne({ isActive: true });
+    const slug = req.params.slug;
+    let product = null;
+    if (slug) {
+      product = await Product.findOne({ slug, isActive: true }) || await Product.findOne({ slug });
+    }
+    if (!product) {
+      product = await Product.findOne({ isActive: true }) || await Product.findOne();
+    }
     if (!product) {
       // Return default configuration if not yet seeded
       return res.status(200).json({
@@ -13,7 +20,7 @@ export const getPublicProduct = async (req, res) => {
           name: DEFAULT_PRODUCT.name,
           slug: DEFAULT_PRODUCT.slug,
           tamilTitle: DEFAULT_PRODUCT.eventTamilTitle,
-          description: 'Six vibhuti from the Arupadai temples, a Murugan keepsake statue, a rudraksh bracelet and chandan. The box travels to all six temples and to the final Yaagam at Thiruttani on 15 November, and comes to you with its authentication certificate.',
+          description: 'A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering.',
           priceInPaise: DEFAULT_PRODUCT.priceInPaise,
           priceInRupees: DEFAULT_PRODUCT.priceInPaise / 100,
           currency: DEFAULT_PRODUCT.currency,

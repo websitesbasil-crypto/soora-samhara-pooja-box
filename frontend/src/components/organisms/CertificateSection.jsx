@@ -2,7 +2,7 @@ import React from 'react';
 import { Eyebrow, Title, Lede } from '../atoms/Typography';
 import { CertificateCard } from '../molecules/CertificateCard';
 
-export const CertificateSection = ({ config }) => {
+export const CertificateSection = ({ config, productName }) => {
   const points = config?.verificationPoints || [
     'Vibhuti sourced from the six Arupadai temples',
     'Box taken to the final Yaagam at Thiruttani on 15 November',
@@ -15,7 +15,7 @@ export const CertificateSection = ({ config }) => {
         <CertificateCard
           authority={config?.authority || 'Sri Sankara TV'}
           title={config?.title || 'Authentication Certificate'}
-          subtitle={config?.subtitle || 'Sathru Samhara Maha Yagam 2026'}
+          subtitle={config?.subtitle || (productName ? `${productName} 2026` : 'Sathru Samhara Maha Yagam 2026')}
           sealText={config?.sealText || 'வேல்'}
           caption={config?.caption || 'Illustration of the certificate. Final design may differ.'}
         />

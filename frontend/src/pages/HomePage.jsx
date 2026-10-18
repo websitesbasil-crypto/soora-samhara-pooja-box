@@ -55,7 +55,7 @@ export const HomePage = () => {
       />
       <ProductContents items={product?.contents} />
       <TempleJourney temples={product?.temples} />
-      <CertificateSection config={product?.certificateConfig} />
+      <CertificateSection config={product?.certificateConfig} productName={product?.name} />
       <OrderForm product={product} settings={settings} />
     </>
   );

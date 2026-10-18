@@ -17,7 +17,7 @@ export const seedDatabase = async () => {
     name: 'Sathru Samhara Maha Yagam',
     slug: DEFAULT_PRODUCT.slug,
     tamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்',
-    description: 'Six vibhuti from the Arupadai temples, a Murugan keepsake statue, a rudraksh bracelet and chandan. The box travels to all six temples and to the final Yaagam at Thiruttani on 15 November, and comes to you with its authentication certificate.',
+    description: ' A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering. ',
     priceInPaise: 250000, // ₹2,500.00
     currency: 'INR',
     minQuantity: 1,
@@ -62,6 +62,7 @@ export const seedDatabase = async () => {
   } else {
     product.name = productData.name;
     product.tamilTitle = productData.tamilTitle;
+    product.description = productData.description;
     if (product.certificateConfig) {
       product.certificateConfig.subtitle = productData.certificateConfig.subtitle;
     }
