@@ -313,7 +313,14 @@ export const OrdersPage = () => {
                         {ord.orderNumber}
                       </button>
                     </td>
-                    <td>{ord.customer?.name}</td>
+                    <td>
+                      <div style={{ fontWeight: 600 }}>{ord.customer?.name}</div>
+                      {ord.sankalpamDetails && ord.sankalpamDetails.length > 0 && (
+                        <div style={{ fontSize: '0.74rem', color: '#B45309', marginTop: 2, display: 'flex', alignItems: 'center', gap: 3 }}>
+                          <span>🪔</span> {ord.sankalpamDetails.length} Sankalpam ({ord.sankalpamDetails.map(p => p.natchathiram || p.name).filter(Boolean).slice(0, 2).join(', ')})
+                        </div>
+                      )}
+                    </td>
                     <td>{ord.customer?.phone}</td>
                     <td>{ord.customer?.city}, {ord.customer?.state}</td>
                     <td>{ord.quantity}</td>
@@ -500,8 +507,8 @@ export const OrdersPage = () => {
             {/* Sankalpam / Archana Family Members */}
             <div style={{ marginBottom: 16, border: '1px solid #FDE68A', background: '#FFFDF5', borderRadius: 6, padding: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <h4 style={{ margin: 0, color: '#92400E', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.95rem' }}>
-                  <span>🪔</span> Sankalpam & Archana Details
+                <h4 style={{ margin: 0, color: '#92400E', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.98rem', fontWeight: 700 }}>
+                  <span>🪔</span> Sankalpam & Archana Details (ஸங்கல்பம் & அர்ச்சனை)
                 </h4>
                 <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
                   {selectedOrderForDetails.sankalpamDetails?.length || 0} Member(s)
