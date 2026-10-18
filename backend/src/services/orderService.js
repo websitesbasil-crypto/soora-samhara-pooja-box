@@ -35,7 +35,7 @@ class OrderService {
     return product;
   }
 
-  async createOrder({ productSlug, quantity, customer, customerUser = null }) {
+  async createOrder({ productSlug, quantity, customer, sankalpamDetails = [], customerUser = null }) {
     // 1. Validate quantity
     const qty = parseInt(quantity, 10);
     if (isNaN(qty) || qty < 1 || qty > 20) {
@@ -60,6 +60,18 @@ class OrderService {
     }
     if (!customer.pincode || !this.validatePincode(customer.pincode)) {
       throw new Error('Enter a valid 6-digit PIN code.');
+    }
+
+    // 2b. Sanitize Sankalpam / Archana details (up to 4 family members)
+    let cleanSankalpamDetails = [];
+    if (Array.isArray(sankalpamDetails)) {
+      cleanSankalpamDetails = sankalpamDetails
+        .slice(0, 4)
+        .map(person => ({
+          name: typeof person?.name === 'string' ? person.name.trim() : '',
+          natchathiram: typeof person?.natchathiram === 'string' ? person.natchathiram.trim() : ''
+        }))
+        .filter(person => person.name.length > 0 || person.natchathiram.length > 0);
     }
 
     // 3. Retrieve active product price from MongoDB (NEVER trust browser pricing)
@@ -93,7 +105,8 @@ class OrderService {
         customerEmail: customer.email ? customer.email.trim().toLowerCase() : '',
         city: customer.city.trim(),
         state: customer.state.trim() || 'Tamil Nadu',
-        pincode: customer.pincode.trim()
+        pincode: customer.pincode.trim(),
+        sankalpamCount: String(cleanSankalpamDetails.length)
       }
     });
 
@@ -117,6 +130,7 @@ class OrderService {
         state: customer.state.trim() || 'Tamil Nadu',
         pincode: customer.pincode.trim()
       },
+      sankalpamDetails: cleanSankalpamDetails,
       customerId: customerUser?._id || null
     };
 
@@ -137,11 +151,12 @@ class OrderService {
       productName: product.name,
       quantity: qty,
       customer: draftPayload.customer,
+      sankalpamDetails: cleanSankalpamDetails,
       orderToken
     };
   }
 
-  async verifyAndConfirmPayment({ orderNumber, razorpayOrderId, razorpayPaymentId, razorpaySignature, orderToken, customer, quantity }) {
+  async verifyAndConfirmPayment({ orderNumber, razorpayOrderId, razorpayPaymentId, razorpaySignature, orderToken, customer, quantity, sankalpamDetails }) {
     // 1. Verify HMAC-SHA256 signature
     const isValidSignature = razorpayService.verifyPaymentSignature({
       razorpayOrderId,
@@ -192,6 +207,9 @@ class OrderService {
       pincode: (orderData?.customer?.pincode || customer?.pincode || gatewayPayment?.notes?.pincode || '600001').trim()
     };
     const resolvedQty = parseInt(orderData?.quantity || quantity || gatewayPayment?.notes?.quantity || 1, 10);
+    const resolvedSankalpam = (Array.isArray(orderData?.sankalpamDetails) && orderData.sankalpamDetails.length > 0)
+      ? orderData.sankalpamDetails
+      : (Array.isArray(sankalpamDetails) ? sankalpamDetails : []);
     const product = await this.getActiveProduct(orderData?.productSlug);
     const unitPriceInPaise = product.priceInPaise;
     const totalAmountInPaise = resolvedQty * unitPriceInPaise;
@@ -201,6 +219,7 @@ class OrderService {
       order = new Order({
         orderNumber: resolvedOrderNumber,
         customer: resolvedCustomer,
+        sankalpamDetails: resolvedSankalpam,
         customerId: orderData?.customerId || null,
         productId: product._id,
         productName: product.name,
@@ -237,6 +256,9 @@ class OrderService {
       order.orderStatus = ORDER_STATUS.PAID;
       order.razorpayPaymentId = razorpayPaymentId;
       order.razorpaySignature = razorpaySignature;
+      if (resolvedSankalpam.length > 0 && (!order.sankalpamDetails || order.sankalpamDetails.length === 0)) {
+        order.sankalpamDetails = resolvedSankalpam;
+      }
       order.timeline.push({
         status: ORDER_STATUS.PAID,
         note: `Payment verified successfully via Razorpay (Payment ID: ${razorpayPaymentId}).`,

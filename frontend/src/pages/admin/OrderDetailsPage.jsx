@@ -217,6 +217,58 @@ export const OrderDetailsPage = () => {
             </div>
           </div>
 
+          {/* Sankalpam / Archana Family Members */}
+          <div className="admin-card" style={{ border: '1px solid #FDE68A', background: '#FFFDF5' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+              <h3 style={{ margin: 0, color: '#92400E', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span>🪔</span> Sankalpam & Archana Details (ஸங்கல்பம்)
+              </h3>
+              <span style={{ fontSize: '0.8rem', background: '#FEF3C7', color: '#92400E', padding: '4px 10px', borderRadius: 12, fontWeight: 600 }}>
+                {order.sankalpamDetails?.length || 0} Member(s) Registered
+              </span>
+            </div>
+
+            {(!order.sankalpamDetails || order.sankalpamDetails.length === 0) ? (
+              <p style={{ color: '#64748B', fontStyle: 'italic', margin: 0 }}>
+                Registered in the name of primary devotee ({order.customer?.name}).
+              </p>
+            ) : (
+              <div style={{ display: 'grid', gap: 10 }}>
+                {order.sankalpamDetails.map((person, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      background: '#FFFFFF',
+                      border: '1px solid #FDE68A',
+                      borderRadius: 6,
+                      padding: '10px 14px'
+                    }}
+                  >
+                    <div>
+                      <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>
+                        Person {idx + 1}
+                      </span>
+                      <strong style={{ fontSize: '0.98rem', color: '#1E293B' }}>
+                        {person.name || 'Devotee'}
+                      </strong>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>
+                        Natchathiram (Birth Star)
+                      </span>
+                      <strong style={{ fontSize: '0.95rem', color: '#B45309' }}>
+                        {person.natchathiram || 'Not Specified'}
+                      </strong>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Devotee Info */}
           <div className="admin-card">
             <h3><User size={18} style={{ verticalAlign: 'middle', marginRight: 6 }} /> Devotee Details</h3>

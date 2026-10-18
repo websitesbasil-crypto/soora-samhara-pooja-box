@@ -132,6 +132,23 @@ export const OrderStatusPage = () => {
               </div>
             )}
 
+            {orderData.sankalpamDetails && orderData.sankalpamDetails.length > 0 && (
+              <div style={{ background: 'rgba(228, 182, 85, 0.08)', border: '1px solid rgba(228, 182, 85, 0.3)', padding: 18, borderRadius: 6, marginBottom: 24 }}>
+                <h4 style={{ margin: '0 0 10px', color: 'var(--head)', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span>🪔</span> Sankalpam & Archana Family Details
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
+                  {orderData.sankalpamDetails.map((person, idx) => (
+                    <div key={idx} style={{ background: 'var(--surface)', border: '1px solid var(--line)', padding: '10px 14px', borderRadius: 4 }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--muted)', display: 'block' }}>Person {idx + 1}</span>
+                      <strong style={{ fontSize: '0.95rem', color: 'var(--head)', display: 'block' }}>{person.name || 'Devotee'}</strong>
+                      <span style={{ fontSize: '0.82rem', color: 'var(--gold)' }}>Star: {person.natchathiram || 'Not Specified'}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Timeline */}
             <div style={{ marginTop: 28 }}>
               <h4 style={{ fontFamily: 'var(--font-display)', color: 'var(--head)', fontSize: '1.2rem', marginBottom: 16 }}>

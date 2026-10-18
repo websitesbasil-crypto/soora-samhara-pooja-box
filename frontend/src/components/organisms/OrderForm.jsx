@@ -8,6 +8,7 @@ import { Button } from '../atoms/Button';
 import { orderService } from '../../services/orderService';
 import { paymentService } from '../../services/paymentService';
 import { useCustomerAuth } from '../../context/CustomerAuthContext';
+import { NAKSHATRAS } from '../../constants/nakshatras';
 
 export const OrderForm = ({ product, settings }) => {
   const navigate = useNavigate();
@@ -24,6 +25,10 @@ export const OrderForm = ({ product, settings }) => {
     state: 'Tamil Nadu',
     pincode: ''
   });
+
+  const [sankalpamList, setSankalpamList] = useState([
+    { name: customer?.name || '', natchathiram: '' }
+  ]);
 
   useEffect(() => {
     if (customer) {
@@ -42,6 +47,12 @@ export const OrderForm = ({ product, settings }) => {
           pincode: prev.pincode || lastAddr?.pincode || ''
         };
       });
+      setSankalpamList((prev) => {
+        if (prev.length === 1 && !prev[0].name && customer.name) {
+          return [{ name: customer.name, natchathiram: prev[0].natchathiram }];
+        }
+        return prev;
+      });
     }
   }, [customer]);
 
@@ -54,6 +65,28 @@ export const OrderForm = ({ product, settings }) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const inr = (n) => `₹${n.toLocaleString('en-IN')}`;
+
+  const handleAddSankalpamPerson = () => {
+    if (sankalpamList.length < 4) {
+      setSankalpamList((prev) => [...prev, { name: '', natchathiram: '' }]);
+    }
+  };
+
+  const handleRemoveSankalpamPerson = (index) => {
+    setSankalpamList((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSankalpamChange = (index, field, value) => {
+    setSankalpamList((prev) => {
+      const next = [...prev];
+      let val = value;
+      if (field === 'name') {
+        val = val.replace(/[^a-zA-Z\s.'-]/g, '');
+      }
+      next[index] = { ...next[index], [field]: val };
+      return next;
+    });
+  };
 
   const validateField = (field, value) => {
     const val = (value || '').trim();
@@ -129,22 +162,25 @@ export const OrderForm = ({ product, settings }) => {
 
     // Strict input formatting as user types
     if (field === 'phone') {
-      // Numbers only, strictly max 10 digits
       rawVal = rawVal.replace(/\D/g, '').slice(0, 10);
     } else if (field === 'pincode') {
-      // Numbers only, strictly max 6 digits
       rawVal = rawVal.replace(/\D/g, '').slice(0, 6);
     } else if (field === 'name') {
-      // Only letters, spaces, dots, and hyphens
       rawVal = rawVal.replace(/[^a-zA-Z\s.'-]/g, '');
+      setSankalpamList((prev) => {
+        if (prev.length > 0 && (!prev[0].name || prev[0].name === formData.name)) {
+          const next = [...prev];
+          next[0] = { ...next[0], name: rawVal };
+          return next;
+        }
+        return prev;
+      });
     } else if (field === 'city') {
-      // Letters only for city
       rawVal = rawVal.replace(/[^a-zA-Z\s.-]/g, '');
     }
 
     setFormData((prev) => ({ ...prev, [field]: rawVal }));
 
-    // Real-time error correction as devotee types
     if (errors[field]) {
       const liveErr = validateField(field, rawVal);
       setErrors((prev) => ({ ...prev, [field]: liveErr }));
@@ -152,6 +188,14 @@ export const OrderForm = ({ product, settings }) => {
   };
 
   const buildMessage = (orderNum = '') => {
+    const activeSankalpam = sankalpamList.filter((p) => p.name.trim() || p.natchathiram.trim());
+    const sankalpamText = activeSankalpam.length > 0
+      ? 'Sankalpam & Archana Details:\n' +
+        activeSankalpam
+          .map((p, idx) => `  ${idx + 1}. ${p.name.trim() || 'Devotee'} [Star: ${p.natchathiram || 'Not Known'}]`)
+          .join('\n')
+      : '';
+
     const lines = [
       `${product?.name || 'Sathru Samhara Maha Yagam'} – order request`,
       orderNum ? `Order Reference: ${orderNum}` : '',
@@ -160,6 +204,7 @@ export const OrderForm = ({ product, settings }) => {
       `Name: ${formData.name.trim()}`,
       `Mobile: ${formData.phone.trim()}`,
       formData.email ? `Email: ${formData.email.trim()}` : '',
+      sankalpamText,
       `Address: ${formData.address.trim().replace(/\s*\n\s*/g, ', ')}, ${formData.city.trim()}, ${formData.state.trim()} – ${formData.pincode.trim()}`
     ].filter(Boolean);
     return lines.join('\n');
@@ -178,12 +223,18 @@ export const OrderForm = ({ product, settings }) => {
       return;
     }
 
+    const cleanSankalpam = sankalpamList
+      .slice(0, 4)
+      .map((p) => ({ name: p.name.trim(), natchathiram: p.natchathiram.trim() }))
+      .filter((p) => p.name.length > 0 || p.natchathiram.length > 0);
+
     setIsSubmitting(true);
     try {
       const res = await orderService.createOrder({
         productSlug: product?.slug || 'soora-samhara-pooja-box-2026',
         quantity,
-        customer: formData
+        customer: formData,
+        sankalpamDetails: cleanSankalpam
       });
 
       if (res.success && res.data) {
@@ -239,6 +290,11 @@ export const OrderForm = ({ product, settings }) => {
       theme: { color: '#2F0A12' },
       onSuccess: async (paymentDetails) => {
         try {
+          const cleanSankalpam = sankalpamList
+            .slice(0, 4)
+            .map((p) => ({ name: p.name.trim(), natchathiram: p.natchathiram.trim() }))
+            .filter((p) => p.name.length > 0 || p.natchathiram.length > 0);
+
           const verifyRes = await paymentService.verifyPayment({
             orderNumber: orderResponse.orderNumber,
             razorpayOrderId: paymentDetails.razorpayOrderId,
@@ -246,7 +302,8 @@ export const OrderForm = ({ product, settings }) => {
             razorpaySignature: paymentDetails.razorpaySignature,
             orderToken: orderResponse.orderToken,
             customer: formData,
-            quantity
+            quantity,
+            sankalpamDetails: cleanSankalpam
           });
 
           if (verifyRes.success) {
@@ -422,6 +479,132 @@ export const OrderForm = ({ product, settings }) => {
                 maxLength={80}
                 autoComplete="email"
               />
+
+              {/* Sankalpam / Archana Details (Up to 4 family members) */}
+              <div style={{
+                background: 'rgba(228, 182, 85, 0.05)',
+                border: '1px solid rgba(228, 182, 85, 0.25)',
+                borderRadius: 6,
+                padding: '16px 18px',
+                marginTop: 6,
+                marginBottom: 6
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
+                  <div>
+                    <h4 style={{ margin: 0, color: 'var(--head)', fontSize: '1.05rem', fontFamily: 'var(--font-display)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span>🪔</span> Sankalpam & Archana Details (ஸங்கல்பம் & அர்ச்சனை)
+                    </h4>
+                    <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--muted)' }}>
+                      Enter Name and Natchathiram (Birth Star) for up to 4 family members to be chanted during the sacred Maha Yagam.
+                    </p>
+                  </div>
+                  <span style={{ fontSize: '0.78rem', background: 'rgba(228, 182, 85, 0.15)', color: 'var(--gold-bright, #D6A342)', padding: '3px 8px', borderRadius: 12, fontWeight: 600 }}>
+                    {sankalpamList.length} of 4 Members
+                  </span>
+                </div>
+
+                <div style={{ display: 'grid', gap: 12 }}>
+                  {sankalpamList.map((person, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        background: 'var(--surface)',
+                        border: '1px solid var(--line)',
+                        borderRadius: 6,
+                        padding: 12
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--head)' }}>
+                          Person {idx + 1} {idx === 0 ? '(Primary Devotee)' : ''}
+                        </span>
+                        {idx > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSankalpamPerson(idx)}
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: '#EF4444',
+                              fontSize: '0.8rem',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4,
+                              padding: '2px 6px',
+                              borderRadius: 4
+                            }}
+                          >
+                            ✕ Remove
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="two" style={{ gap: 12 }}>
+                        <div className="fld">
+                          <label htmlFor={`sankalpam-name-${idx}`} style={{ fontSize: '0.85rem' }}>
+                            Full Name
+                          </label>
+                          <input
+                            id={`sankalpam-name-${idx}`}
+                            type="text"
+                            placeholder={idx === 0 ? 'Devotee name' : `Family member ${idx + 1} name`}
+                            value={person.name}
+                            onChange={(e) => handleSankalpamChange(idx, 'name', e.target.value)}
+                            maxLength={60}
+                            style={{ minHeight: 44, padding: '8px 12px', fontSize: '0.92rem' }}
+                          />
+                        </div>
+
+                        <div className="fld">
+                          <label htmlFor={`sankalpam-star-${idx}`} style={{ fontSize: '0.85rem' }}>
+                            Natchathiram (Birth Star)
+                          </label>
+                          <select
+                            id={`sankalpam-star-${idx}`}
+                            value={person.natchathiram}
+                            onChange={(e) => handleSankalpamChange(idx, 'natchathiram', e.target.value)}
+                            style={{ minHeight: 44, padding: '8px 12px', fontSize: '0.92rem' }}
+                          >
+                            <option value="">Select Natchathiram / நட்சத்திரம்</option>
+                            {NAKSHATRAS.map((star) => (
+                              <option key={star} value={star}>
+                                {star}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {sankalpamList.length < 4 && (
+                  <div style={{ marginTop: 12 }}>
+                    <button
+                      type="button"
+                      onClick={handleAddSankalpamPerson}
+                      style={{
+                        background: 'transparent',
+                        border: '1px dashed var(--gold)',
+                        color: 'var(--head)',
+                        borderRadius: 4,
+                        padding: '9px 14px',
+                        fontSize: '0.86rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 6
+                      }}
+                    >
+                      <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>+</span> Add Family Member (Up to 4 people)
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <FormField
                 id="addr"

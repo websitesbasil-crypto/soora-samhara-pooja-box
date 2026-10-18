@@ -472,6 +472,54 @@ export const OrdersPage = () => {
               </div>
             </div>
 
+            {/* Sankalpam / Archana Family Members */}
+            <div style={{ marginBottom: 16, border: '1px solid #FDE68A', background: '#FFFDF5', borderRadius: 6, padding: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <h4 style={{ margin: 0, color: '#92400E', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.95rem' }}>
+                  <span>🪔</span> Sankalpam & Archana Details
+                </h4>
+                <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
+                  {selectedOrderForDetails.sankalpamDetails?.length || 0} Member(s)
+                </span>
+              </div>
+              
+              {(!selectedOrderForDetails.sankalpamDetails || selectedOrderForDetails.sankalpamDetails.length === 0) ? (
+                <div style={{ fontSize: '0.82rem', color: '#64748B', fontStyle: 'italic', padding: '4px 0' }}>
+                  Registered in devotee's primary name ({selectedOrderForDetails.customer?.name}).
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gap: 8 }}>
+                  {selectedOrderForDetails.sankalpamDetails.map((person, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        background: '#FFFFFF',
+                        border: '1px solid #FDE68A',
+                        borderRadius: 4,
+                        padding: '6px 10px',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      <div>
+                        <span style={{ fontWeight: 600, color: '#1E293B' }}>
+                          {idx + 1}. {person.name || 'Devotee'}
+                        </span>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ color: '#64748B', fontSize: '0.75rem', marginRight: 4 }}>Birth Star:</span>
+                        <strong style={{ color: '#B45309' }}>
+                          {person.natchathiram || 'Not Specified'}
+                        </strong>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Order Items & Quantities */}
             <div style={{ marginBottom: 16, border: '1px solid #e2e8f0', borderRadius: 6, padding: 12 }}>
               <h4 style={{ margin: '0 0 10px', color: '#1E293B', display: 'flex', alignItems: 'center', gap: 6 }}>

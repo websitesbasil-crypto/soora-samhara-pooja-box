@@ -8,11 +8,12 @@ import { ORDER_STATUS, PAYMENT_STATUS } from '../config/constants.js';
 
 export const createOrder = async (req, res) => {
   try {
-    const { productSlug, quantity, customer } = req.body;
+    const { productSlug, quantity, customer, sankalpamDetails } = req.body;
     const result = await orderService.createOrder({
       productSlug,
       quantity,
       customer,
+      sankalpamDetails,
       customerUser: req.customer
     });
     res.status(201).json({
@@ -55,6 +56,7 @@ export const getOrderStatus = async (req, res) => {
         orderStatus: order.orderStatus,
         paymentStatus: order.paymentStatus,
         createdAt: order.createdAt,
+        sankalpamDetails: order.sankalpamDetails || [],
         tracking: order.tracking,
         timeline: order.timeline.map(t => ({
           status: t.status,
@@ -282,7 +284,8 @@ export const exportOrdersCSV = async (req, res) => {
       'Payment Status',
       'Order Status',
       'Razorpay Order ID',
-      'Razorpay Payment ID'
+      'Razorpay Payment ID',
+      'Sankalpam Members (Name & Natchathiram)'
     ];
 
     const escapeCSV = (val) => {
@@ -307,7 +310,8 @@ export const exportOrdersCSV = async (req, res) => {
       escapeCSV(o.paymentStatus),
       escapeCSV(o.orderStatus),
       escapeCSV(o.razorpayOrderId || ''),
-      escapeCSV(o.razorpayPaymentId || '')
+      escapeCSV(o.razorpayPaymentId || ''),
+      escapeCSV((o.sankalpamDetails || []).map(p => `${p.name || 'Devotee'} [${p.natchathiram || 'Not Specified'}]`).join('; '))
     ].join(','));
 
     const csvContent = [headers.join(','), ...rows].join('\n');

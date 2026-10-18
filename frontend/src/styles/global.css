@@ -835,7 +835,7 @@ form.card {
   color: var(--head);
 }
 
-.fld input, .fld textarea {
+.fld input, .fld textarea, .fld select {
   width: 100%; 
   font: 400 1rem var(--font-body); 
   color: var(--field-ink);
@@ -847,7 +847,7 @@ form.card {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.fld input:focus, .fld textarea:focus {
+.fld input:focus, .fld textarea:focus, .fld select:focus {
   border-color: var(--gold);
   box-shadow: 0 0 0 3px rgba(214, 163, 66, 0.3);
   outline: none;

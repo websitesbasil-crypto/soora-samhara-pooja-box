@@ -8,6 +8,11 @@ const OrderTimelineSchema = new mongoose.Schema({
   updatedBy: { type: String, default: 'System' }
 }, { _id: false });
 
+const SankalpamPersonSchema = new mongoose.Schema({
+  name: { type: String, default: '', trim: true },
+  natchathiram: { type: String, default: '', trim: true }
+}, { _id: false });
+
 const OrderSchema = new mongoose.Schema({
   orderNumber: { 
     type: String, 
@@ -17,6 +22,7 @@ const OrderSchema = new mongoose.Schema({
     uppercase: true,
     trim: true 
   },
+  sankalpamDetails: [SankalpamPersonSchema],
   customer: {
     name: { type: String, required: true, trim: true },
     phone: { type: String, required: true, trim: true, index: true },

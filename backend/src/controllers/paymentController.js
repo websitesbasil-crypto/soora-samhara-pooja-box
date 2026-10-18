@@ -7,7 +7,7 @@ import { PAYMENT_STATUS } from '../config/constants.js';
 
 export const verifyPayment = async (req, res) => {
   try {
-    const { orderNumber, razorpayOrderId, razorpayPaymentId, razorpaySignature, orderToken, customer, quantity } = req.body;
+    const { orderNumber, razorpayOrderId, razorpayPaymentId, razorpaySignature, orderToken, customer, quantity, sankalpamDetails } = req.body;
 
     if (!razorpayOrderId || !razorpayPaymentId) {
       return res.status(400).json({
@@ -23,7 +23,8 @@ export const verifyPayment = async (req, res) => {
       razorpaySignature,
       orderToken,
       customer,
-      quantity
+      quantity,
+      sankalpamDetails
     });
 
     res.status(200).json({

@@ -5,8 +5,8 @@ export const orderService = {
     return api.get(`/products/${slug}`);
   },
 
-  createOrder: async ({ productSlug = 'soora-samhara-pooja-box-2026', quantity, customer }) => {
-    return api.post('/orders', { productSlug, quantity, customer });
+  createOrder: async ({ productSlug = 'soora-samhara-pooja-box-2026', quantity, customer, sankalpamDetails = [] }) => {
+    return api.post('/orders', { productSlug, quantity, customer, sankalpamDetails });
   },
 
   getOrderStatus: async (orderNumber) => {
