@@ -769,7 +769,7 @@
           <a class="btn" href="#order">Reserve your box</a>
           <a class="link-quiet" href="#inside">See what is inside</a>
         </div>
-        <p class="countdown"><strong id="days-left">31 days to the Yaagam</strong><span>15 November 2026 ·
+        <p class="countdown"><strong id="days-left">28 days to the Maha Yaagam</strong><span>15 November 2026 ·
             Thiruttani</span></p>
       </div>
       <div class="art" style="flex-direction: column;">
@@ -1015,9 +1015,9 @@
     var diff = target - Date.now();
     var d = Math.ceil(diff / 86400000);
     var label;
-    if (diff > 0) { label = d + (d === 1 ? " day" : " days") + " to the Yaagam"; }
-    else if (diff > -86400000) { label = "The Yaagam is today"; }
-    else { label = "The Yaagam has taken place"; }
+    if (diff > 0) { label = d + (d === 1 ? " day" : " days") + " to the Maha Yaagam"; }
+    else if (diff > -86400000) { label = "The Maha Yaagam is today"; }
+    else { label = "The Maha Yaagam has taken place"; }
     $("days-left").textContent = label;
 
     // Quantity and totals

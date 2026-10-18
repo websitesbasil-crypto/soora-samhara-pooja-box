@@ -12,11 +12,11 @@ export const useCountdown = (targetDateString = '2026-11-15T00:00:00+05:30') => 
     let label = '';
 
     if (diff > 0) {
-      label = `${d} ${d === 1 ? 'day' : 'days'} to the Yaagam`;
+      label = `${d} ${d === 1 ? 'day' : 'days'} to the Maha Yaagam`;
     } else if (diff > -86400000) {
-      label = 'The Yaagam is today';
+      label = 'The Maha Yaagam is today';
     } else {
-      label = 'The Yaagam has taken place';
+      label = 'The Maha Yaagam has taken place';
     }
 
     const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
