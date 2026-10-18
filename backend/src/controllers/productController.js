@@ -27,7 +27,8 @@ export const getPublicProduct = async (req, res) => {
           eventDate: DEFAULT_PRODUCT.eventDate,
           eventLocation: DEFAULT_PRODUCT.eventLocation,
           minQuantity: 1,
-          maxQuantity: 20
+          maxQuantity: 20,
+          contactConfig: DEFAULT_PRODUCT.contactConfig
         }
       });
     }
@@ -53,7 +54,7 @@ export const getAdminProducts = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, priceInPaise, isActive, eventDate, eventLocation, stockCapacity, certificateConfig } = req.body;
+    const { name, description, priceInPaise, isActive, eventDate, eventLocation, stockCapacity, certificateConfig, contactConfig } = req.body;
 
     const product = await Product.findById(id);
     if (!product) {
@@ -70,6 +71,7 @@ export const updateProduct = async (req, res) => {
     if (eventLocation) product.eventLocation = eventLocation;
     if (stockCapacity !== undefined) product.stockCapacity = stockCapacity;
     if (certificateConfig) product.certificateConfig = { ...product.certificateConfig, ...certificateConfig };
+    if (contactConfig) product.contactConfig = { ...product.contactConfig, ...contactConfig };
 
     await product.save();
 

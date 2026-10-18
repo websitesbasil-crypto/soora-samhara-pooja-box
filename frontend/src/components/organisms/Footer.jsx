@@ -12,6 +12,8 @@ export const Footer = () => {
           <span>·</span>
           <Link to="/profile" style={{ color: 'inherit' }}>My Profile</Link>
           <span>·</span>
+          <Link to="/contact" style={{ color: 'inherit' }}>Contact Us</Link>
+          <span>·</span>
           <Link to="/admin/login" style={{ color: 'inherit' }}>Staff Portal</Link>
         </div>
       </div>

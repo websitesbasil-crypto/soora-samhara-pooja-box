@@ -45,6 +45,20 @@ const ProductSchema = new mongoose.Schema({
         'Certificate issued by Sri Sankara TV, packed inside your box'
       ]
     }
+  },
+  contactConfig: {
+    title: { type: String, default: 'Contact Sri Sankara TV' },
+    tamilTitle: { type: String, default: 'தொடர்புக்கு / உதவிக்கு' },
+    description: {
+      type: String,
+      default: 'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.'
+    },
+    phone1: { type: String, default: '95917 47001' },
+    phone2: { type: String, default: '95917 47002' },
+    email: { type: String, default: 'Srisankaratvshop@gmail.com' },
+    whatsapp: { type: String, default: '95917 47001' },
+    timings: { type: String, default: 'Monday – Saturday: 9:00 AM – 8:00 PM IST' },
+    address: { type: String, default: 'Sri Sankara TV Devotional Support Desk' }
   }
 }, {
   timestamps: true

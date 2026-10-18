@@ -52,6 +52,17 @@ export const seedDatabase = async () => {
         'Box taken to the final Yaagam at Thiruttani on 15 November',
         'Certificate issued by Sri Sankara TV, packed inside your box'
       ]
+    },
+    contactConfig: {
+      title: 'Contact Sri Sankara TV',
+      tamilTitle: 'தொடர்புக்கு / உதவிக்கு',
+      description: 'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.',
+      phone1: '95917 47001',
+      phone2: '95917 47002',
+      email: 'Srisankaratvshop@gmail.com',
+      whatsapp: '95917 47001',
+      timings: 'Monday – Saturday: 9:00 AM – 8:00 PM IST',
+      address: 'Sri Sankara TV Devotional Support Desk'
     }
   };
 
@@ -65,6 +76,9 @@ export const seedDatabase = async () => {
     product.description = productData.description;
     if (product.certificateConfig) {
       product.certificateConfig.subtitle = productData.certificateConfig.subtitle;
+    }
+    if (!product.contactConfig || !product.contactConfig.phone1) {
+      product.contactConfig = productData.contactConfig;
     }
     await product.save();
     console.log('[Seed] Updated existing product to Sathru Samhara Maha Yagam.');

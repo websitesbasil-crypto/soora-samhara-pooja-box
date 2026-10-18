@@ -43,5 +43,16 @@ export const DEFAULT_PRODUCT = {
   minQuantityPerOrder: 1,
   eventDate: '2026-11-15T00:00:00+05:30',
   eventLocation: 'Thiruttani',
-  eventTamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்'
+  eventTamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்',
+  contactConfig: {
+    title: 'Contact Sri Sankara TV',
+    tamilTitle: 'தொடர்புக்கு / உதவிக்கு',
+    description: 'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.',
+    phone1: '95917 47001',
+    phone2: '95917 47002',
+    email: 'Srisankaratvshop@gmail.com',
+    whatsapp: '95917 47001',
+    timings: 'Monday – Saturday: 9:00 AM – 8:00 PM IST',
+    address: 'Sri Sankara TV Devotional Support Desk'
+  }
 };

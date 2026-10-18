@@ -9,6 +9,7 @@ import HomePage from '../pages/HomePage';
 import PaymentResultPage from '../pages/PaymentResultPage';
 import OrderStatusPage from '../pages/OrderStatusPage';
 import ProfilePage from '../pages/ProfilePage';
+import ContactPage from '../pages/ContactPage';
 
 // Admin Pages
 import AdminLoginPage from '../pages/AdminLoginPage';
@@ -81,6 +82,22 @@ export const AppRoutes = () => {
         element={
           <PublicLayout>
             <ProfilePage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/contact"
+        element={
+          <PublicLayout>
+            <ContactPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/contact-us"
+        element={
+          <PublicLayout>
+            <ContactPage />
           </PublicLayout>
         }
       />

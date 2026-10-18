@@ -413,6 +413,7 @@ export const updateContent = async (req, res) => {
       if (productUpdates.contents) product.contents = productUpdates.contents;
       if (productUpdates.temples) product.temples = productUpdates.temples;
       if (productUpdates.certificateConfig) product.certificateConfig = productUpdates.certificateConfig;
+      if (productUpdates.contactConfig) product.contactConfig = productUpdates.contactConfig;
       await product.save();
     }
 

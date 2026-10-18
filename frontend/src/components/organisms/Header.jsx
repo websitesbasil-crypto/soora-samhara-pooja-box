@@ -43,6 +43,12 @@ export const Header = () => {
           >
             My Profile
           </Link>
+          <Link
+            to="/contact"
+            className="nav-link-track"
+          >
+            Contact Us
+          </Link>
 
           {isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

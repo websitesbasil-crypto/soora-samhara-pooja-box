@@ -43,7 +43,8 @@ export const ContentPage = () => {
           eventLocation: content.product.eventLocation,
           contents: content.product.contents,
           temples: content.product.temples,
-          certificateConfig: content.product.certificateConfig
+          certificateConfig: content.product.certificateConfig,
+          contactConfig: content.product.contactConfig
         }
       });
 
@@ -224,6 +225,78 @@ export const ContentPage = () => {
                   label="Seal Tamil Text"
                   value={product.certificateConfig?.sealText || ''}
                   onChange={(e) => setContent({ ...content, product: { ...product, certificateConfig: { ...product.certificateConfig, sealText: e.target.value } } })}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Us Page Configuration */}
+          <div className="admin-card">
+            <h3>Contact Us Page & Devotee Helplines</h3>
+            <p style={{ fontSize: '0.85rem', color: '#64748B', marginBottom: 16 }}>
+              Edit the live numbers, header texts, and description shown on the public Contact Us page (/contact).
+            </p>
+            <div style={{ display: 'grid', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <FormField
+                  id="contact-tamil-title"
+                  label="Tamil Title (lang='ta')"
+                  value={product.contactConfig?.tamilTitle || ''}
+                  onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, tamilTitle: e.target.value } } })}
+                  placeholder="தொடர்புக்கு / உதவிக்கு"
+                />
+                <FormField
+                  id="contact-main-title"
+                  label="Contact Page Main Heading"
+                  value={product.contactConfig?.title || ''}
+                  onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, title: e.target.value } } })}
+                  placeholder="Contact Sri Sankara TV"
+                />
+              </div>
+
+              <FormField
+                id="contact-desc"
+                label="Text Above Numbers (Introductory Description)"
+                as="textarea"
+                rows={3}
+                value={product.contactConfig?.description || ''}
+                onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, description: e.target.value } } })}
+                placeholder="For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box..."
+              />
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <FormField
+                  id="contact-phone1"
+                  label="Primary Devotee Helpline Number *"
+                  value={product.contactConfig?.phone1 || ''}
+                  onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, phone1: e.target.value } } })}
+                  placeholder="95917 47001"
+                  required
+                />
+                <FormField
+                  id="contact-phone2"
+                  label="Secondary Devotee Helpline Number *"
+                  value={product.contactConfig?.phone2 || ''}
+                  onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, phone2: e.target.value } } })}
+                  placeholder="95917 47002"
+                  required
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <FormField
+                  id="contact-email"
+                  label="Support Email"
+                  value={product.contactConfig?.email || ''}
+                  onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, email: e.target.value } } })}
+                  placeholder="Srisankaratvshop@gmail.com"
+                />
+                <FormField
+                  id="contact-timings"
+                  label="Helpline Support Timings"
+                  value={product.contactConfig?.timings || ''}
+                  onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, timings: e.target.value } } })}
+                  placeholder="Monday – Saturday: 9:00 AM – 8:00 PM IST"
                 />
               </div>
             </div>
