@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { orderService } from '../services/orderService';
-import { Eyebrow, Title, Lede } from '../components/atoms/Typography';
+import { Title } from '../components/atoms/Typography';
 import {
   Phone,
   MessageCircle,
@@ -35,7 +35,7 @@ export const ContactPage = () => {
     fetchContactInfo();
   }, []);
 
-  // Safe defaults
+  // Safe defaults aligned with Super Admin configuration
   const tamilTitle = contactData?.tamilTitle || 'தொடர்புக்கு / உதவிக்கு';
   const mainTitle = contactData?.title || 'Contact Sri Sankara TV';
   const description = contactData?.description ||
@@ -52,135 +52,157 @@ export const ContactPage = () => {
   const p2Digits = cleanPhone(phone2);
 
   return (
-    <div className="band" style={{ paddingTop: 48, paddingBottom: 64, minHeight: '80vh' }}>
-      <div className="wrap" style={{ maxWidth: 860, margin: '0 auto' }}>
+    <div
+      className="band"
+      style={{
+        paddingTop: 'calc(36px + 1.5vw)',
+        paddingBottom: 96,
+        minHeight: '85vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+      }}
+    >
+      <div className="wrap" style={{ maxWidth: 940, margin: '0 auto', width: '100%' }}>
         {/* Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+        <div style={{ textAlign: 'center', marginBottom: 44 }}>
           <div
             lang="ta"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              fontSize: '1rem',
-              color: 'var(--hero-gold, #E4B655)',
+              fontSize: '0.96rem',
+              color: 'var(--gold-bright, #F2BC55)',
               fontWeight: 600,
               letterSpacing: '0.04em',
-              marginBottom: 8,
-              padding: '4px 14px',
-              borderRadius: 20,
-              background: 'rgba(228, 182, 85, 0.1)',
-              border: '1px solid rgba(228, 182, 85, 0.25)'
+              marginBottom: 14,
+              padding: '6px 18px',
+              borderRadius: 24,
+              background: 'rgba(214, 163, 66, 0.12)',
+              border: '1px solid rgba(214, 163, 66, 0.35)',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
             }}
           >
             <Sparkles size={16} />
             <span>{tamilTitle}</span>
           </div>
 
-          <Title style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', margin: '12px 0' }}>
+          <Title
+            style={{
+              fontSize: 'clamp(2rem, 4vw, 2.85rem)',
+              margin: '8px 0 16px 0',
+              color: 'var(--head, #F7E9CF)',
+              lineHeight: 1.2
+            }}
+          >
             {mainTitle}
           </Title>
 
-          <Lede
+          <p
             style={{
-              maxWidth: 680,
+              maxWidth: 720,
               margin: '0 auto',
-              lineHeight: 1.65,
-              color: '#4A5568',
-              fontSize: '1.05rem'
+              lineHeight: 1.75,
+              color: 'var(--muted, #D9C6A6)',
+              fontSize: 'clamp(1rem, 1.5vw, 1.12rem)',
+              fontWeight: 400
             }}
           >
             {description}
-          </Lede>
+          </p>
         </div>
 
         {/* Primary Contact Numbers Cards */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: 20,
-            marginBottom: 32
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: 24,
+            marginBottom: 36
           }}
         >
           {/* Helpline 1 */}
           <div
             style={{
-              background: '#FFFFFF',
-              border: '1.5px solid rgba(228, 182, 85, 0.45)',
-              borderRadius: 12,
-              padding: '28px 24px',
-              boxShadow: '0 8px 24px rgba(47, 10, 18, 0.06)',
-              position: 'relative',
+              background: 'linear-gradient(160deg, #351014 0%, #26090D 100%)',
+              border: '1px solid rgba(214, 163, 66, 0.35)',
+              borderRadius: 14,
+              padding: '32px 28px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(214, 163, 66, 0.15)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+              transition: 'transform 0.25s ease, box-shadow 0.25s ease'
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
                 <span
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     borderRadius: '50%',
-                    background: 'rgba(228, 182, 85, 0.18)',
-                    color: '#8A1528',
+                    background: 'rgba(214, 163, 66, 0.15)',
+                    border: '1px solid rgba(214, 163, 66, 0.35)',
+                    color: 'var(--gold-bright, #F2BC55)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    flexShrink: 0
                   }}
                 >
-                  <Headphones size={20} />
+                  <Headphones size={22} />
                 </span>
                 <div>
                   <span
                     style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.8rem',
                       fontWeight: 700,
-                      letterSpacing: '0.06em',
+                      letterSpacing: '0.08em',
                       textTransform: 'uppercase',
-                      color: '#8A1528'
+                      color: 'var(--gold-bright, #F2BC55)'
                     }}
                   >
                     Devotee Helpline 1
                   </span>
-                  <div style={{ fontSize: '0.85rem', color: '#64748B' }}>Primary Support Line</div>
+                  <div style={{ fontSize: '0.86rem', color: 'var(--muted, #D9C6A6)' }}>
+                    Primary Support Line
+                  </div>
                 </div>
               </div>
 
               <div
                 style={{
-                  fontSize: 'clamp(1.6rem, 2.5vw, 1.95rem)',
+                  fontSize: 'clamp(1.75rem, 2.6vw, 2.2rem)',
                   fontWeight: 800,
-                  color: '#2F0A12',
+                  color: 'var(--head, #F7E9CF)',
                   letterSpacing: '0.04em',
                   fontFamily: 'monospace, sans-serif',
-                  margin: '16px 0 20px 0'
+                  margin: '18px 0 24px 0'
                 }}
               >
                 +91 {phone1}
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 'auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 'auto' }}>
               <a
                 href={`tel:${p1Digits.startsWith('91') ? `+${p1Digits}` : `+91${p1Digits}`}`}
                 style={{
-                  flex: 1,
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  padding: '11px 16px',
+                  padding: '12px 16px',
                   borderRadius: 6,
-                  background: '#2F0A12',
-                  color: '#FFFFFF',
-                  fontWeight: 600,
-                  fontSize: '0.92rem',
+                  background: 'linear-gradient(135deg, #F2BC55 0%, #D6A342 100%)',
+                  color: '#200B0E',
+                  fontWeight: 700,
+                  fontSize: '0.94rem',
                   textDecoration: 'none',
-                  border: '1px solid #2F0A12'
+                  boxShadow: '0 4px 14px rgba(214, 163, 66, 0.35)',
+                  transition: 'transform 0.2s ease'
                 }}
               >
                 <Phone size={16} />
@@ -192,19 +214,19 @@ export const ContactPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  flex: 1,
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  padding: '11px 16px',
+                  padding: '12px 16px',
                   borderRadius: 6,
                   background: '#25D366',
                   color: '#FFFFFF',
-                  fontWeight: 600,
-                  fontSize: '0.92rem',
+                  fontWeight: 700,
+                  fontSize: '0.94rem',
                   textDecoration: 'none',
-                  border: '1px solid #25D366'
+                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)',
+                  transition: 'transform 0.2s ease'
                 }}
               >
                 <MessageCircle size={16} />
@@ -216,81 +238,84 @@ export const ContactPage = () => {
           {/* Helpline 2 */}
           <div
             style={{
-              background: '#FFFFFF',
-              border: '1.5px solid rgba(228, 182, 85, 0.45)',
-              borderRadius: 12,
-              padding: '28px 24px',
-              boxShadow: '0 8px 24px rgba(47, 10, 18, 0.06)',
-              position: 'relative',
+              background: 'linear-gradient(160deg, #351014 0%, #26090D 100%)',
+              border: '1px solid rgba(214, 163, 66, 0.35)',
+              borderRadius: 14,
+              padding: '32px 28px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(214, 163, 66, 0.15)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+              transition: 'transform 0.25s ease, box-shadow 0.25s ease'
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
                 <span
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     borderRadius: '50%',
-                    background: 'rgba(228, 182, 85, 0.18)',
-                    color: '#8A1528',
+                    background: 'rgba(214, 163, 66, 0.15)',
+                    border: '1px solid rgba(214, 163, 66, 0.35)',
+                    color: 'var(--gold-bright, #F2BC55)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    flexShrink: 0
                   }}
                 >
-                  <Headphones size={20} />
+                  <Headphones size={22} />
                 </span>
                 <div>
                   <span
                     style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.8rem',
                       fontWeight: 700,
-                      letterSpacing: '0.06em',
+                      letterSpacing: '0.08em',
                       textTransform: 'uppercase',
-                      color: '#8A1528'
+                      color: 'var(--gold-bright, #F2BC55)'
                     }}
                   >
                     Devotee Helpline 2
                   </span>
-                  <div style={{ fontSize: '0.85rem', color: '#64748B' }}>Secondary Support Line</div>
+                  <div style={{ fontSize: '0.86rem', color: 'var(--muted, #D9C6A6)' }}>
+                    Secondary Support Line
+                  </div>
                 </div>
               </div>
 
               <div
                 style={{
-                  fontSize: 'clamp(1.6rem, 2.5vw, 1.95rem)',
+                  fontSize: 'clamp(1.75rem, 2.6vw, 2.2rem)',
                   fontWeight: 800,
-                  color: '#2F0A12',
+                  color: 'var(--head, #F7E9CF)',
                   letterSpacing: '0.04em',
                   fontFamily: 'monospace, sans-serif',
-                  margin: '16px 0 20px 0'
+                  margin: '18px 0 24px 0'
                 }}
               >
                 +91 {phone2}
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 'auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 'auto' }}>
               <a
                 href={`tel:${p2Digits.startsWith('91') ? `+${p2Digits}` : `+91${p2Digits}`}`}
                 style={{
-                  flex: 1,
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  padding: '11px 16px',
+                  padding: '12px 16px',
                   borderRadius: 6,
-                  background: '#2F0A12',
-                  color: '#FFFFFF',
-                  fontWeight: 600,
-                  fontSize: '0.92rem',
+                  background: 'linear-gradient(135deg, #F2BC55 0%, #D6A342 100%)',
+                  color: '#200B0E',
+                  fontWeight: 700,
+                  fontSize: '0.94rem',
                   textDecoration: 'none',
-                  border: '1px solid #2F0A12'
+                  boxShadow: '0 4px 14px rgba(214, 163, 66, 0.35)',
+                  transition: 'transform 0.2s ease'
                 }}
               >
                 <Phone size={16} />
@@ -302,19 +327,19 @@ export const ContactPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  flex: 1,
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  padding: '11px 16px',
+                  padding: '12px 16px',
                   borderRadius: 6,
                   background: '#25D366',
                   color: '#FFFFFF',
-                  fontWeight: 600,
-                  fontSize: '0.92rem',
+                  fontWeight: 700,
+                  fontSize: '0.94rem',
                   textDecoration: 'none',
-                  border: '1px solid #25D366'
+                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)',
+                  transition: 'transform 0.2s ease'
                 }}
               >
                 <MessageCircle size={16} />
@@ -324,64 +349,95 @@ export const ContactPage = () => {
           </div>
         </div>
 
-        {/* Additional Devotional Assistance Details */}
+        {/* Devotee Assistance & Office Hours Card */}
         <div
           style={{
-            background: 'rgba(255, 255, 255, 0.95)',
-            border: '1px solid #E2E8F0',
-            borderRadius: 12,
-            padding: '24px 28px',
-            marginBottom: 36,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+            background: 'rgba(46, 13, 18, 0.75)',
+            border: '1px solid rgba(214, 163, 66, 0.3)',
+            borderRadius: 14,
+            padding: '28px 32px',
+            marginBottom: 40,
+            boxShadow: '0 8px 28px rgba(0, 0, 0, 0.35)'
           }}
         >
           <h3
             style={{
-              fontSize: '1.15rem',
-              fontWeight: 700,
-              color: '#2F0A12',
-              marginBottom: 18,
+              fontSize: '1.18rem',
+              fontWeight: 600,
+              color: 'var(--head, #F7E9CF)',
+              marginBottom: 20,
               display: 'flex',
               alignItems: 'center',
-              gap: 8
+              gap: 10,
+              fontFamily: 'var(--font-display)'
             }}
           >
-            <ShieldCheck size={20} color="#8A1528" />
-            Devotee Assistance & Office Hours
+            <ShieldCheck size={22} color="var(--gold-bright, #F2BC55)" />
+            <span>Devotee Assistance & Office Hours</span>
           </h3>
 
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: 20
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: 22
             }}
           >
             {/* Timings */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-              <Clock size={20} color="#8A1528" style={{ marginTop: 2, flexShrink: 0 }} />
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+              <span
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: '50%',
+                  background: 'rgba(214, 163, 66, 0.12)',
+                  border: '1px solid rgba(214, 163, 66, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  marginTop: 2
+                }}
+              >
+                <Clock size={18} color="var(--gold, #D6A342)" />
+              </span>
               <div>
-                <strong style={{ display: 'block', fontSize: '0.88rem', color: '#1E293B', marginBottom: 2 }}>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--head, #F7E9CF)', marginBottom: 3 }}>
                   Helpline Support Hours
                 </strong>
-                <span style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+                <span style={{ fontSize: '0.88rem', color: 'var(--muted, #D9C6A6)', lineHeight: 1.55 }}>
                   {timings}
                 </span>
               </div>
             </div>
 
             {/* Email */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-              <Mail size={20} color="#8A1528" style={{ marginTop: 2, flexShrink: 0 }} />
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+              <span
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: '50%',
+                  background: 'rgba(214, 163, 66, 0.12)',
+                  border: '1px solid rgba(214, 163, 66, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  marginTop: 2
+                }}
+              >
+                <Mail size={18} color="var(--gold, #D6A342)" />
+              </span>
               <div>
-                <strong style={{ display: 'block', fontSize: '0.88rem', color: '#1E293B', marginBottom: 2 }}>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--head, #F7E9CF)', marginBottom: 3 }}>
                   Devotee Email Desk
                 </strong>
                 <a
                   href={`mailto:${email}`}
                   style={{
-                    fontSize: '0.85rem',
-                    color: '#8A1528',
+                    fontSize: '0.88rem',
+                    color: 'var(--gold-bright, #F2BC55)',
                     textDecoration: 'underline',
                     fontWeight: 600,
                     wordBreak: 'break-all'
@@ -393,13 +449,28 @@ export const ContactPage = () => {
             </div>
 
             {/* Service Location / Desk */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-              <MapPin size={20} color="#8A1528" style={{ marginTop: 2, flexShrink: 0 }} />
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+              <span
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: '50%',
+                  background: 'rgba(214, 163, 66, 0.12)',
+                  border: '1px solid rgba(214, 163, 66, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  marginTop: 2
+                }}
+              >
+                <MapPin size={18} color="var(--gold, #D6A342)" />
+              </span>
               <div>
-                <strong style={{ display: 'block', fontSize: '0.88rem', color: '#1E293B', marginBottom: 2 }}>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--head, #F7E9CF)', marginBottom: 3 }}>
                   Devotional Broadcast Center
                 </strong>
-                <span style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+                <span style={{ fontSize: '0.88rem', color: 'var(--muted, #D9C6A6)', lineHeight: 1.55 }}>
                   {address}
                 </span>
               </div>
@@ -411,19 +482,19 @@ export const ContactPage = () => {
         <div style={{ textAlign: 'center' }}>
           <Link
             to="/#order"
-            className="btn-gold"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 10,
-              padding: '12px 28px',
+              padding: '14px 32px',
               borderRadius: 6,
-              background: 'linear-gradient(135deg, #E4B655 0%, #D4A33B 100%)',
-              color: '#2F0A12',
+              background: 'linear-gradient(135deg, #F2BC55 0%, #D6A342 100%)',
+              color: '#200B0E',
               fontWeight: 700,
               fontSize: '1rem',
               textDecoration: 'none',
-              boxShadow: '0 4px 14px rgba(228, 182, 85, 0.4)'
+              boxShadow: '0 6px 20px rgba(214, 163, 66, 0.4)',
+              transition: 'all 0.25s ease'
             }}
           >
             <span>Book Sathru Samhara Maha Yagam Pooja Box</span>
