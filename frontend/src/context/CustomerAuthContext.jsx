@@ -74,6 +74,22 @@ export const CustomerAuthProvider = ({ children }) => {
     setMyOrdersModalOpen(false);
   };
 
+  const forgotPassword = async ({ identifier }) => {
+    const res = await customerAuthService.forgotPassword({ identifier });
+    if (res.success) {
+      return res;
+    }
+    throw new Error(res.message || 'Failed to send verification code');
+  };
+
+  const resetPassword = async ({ identifier, otpCode, newPassword }) => {
+    const res = await customerAuthService.resetPassword({ identifier, otpCode, newPassword });
+    if (res.success) {
+      return res;
+    }
+    throw new Error(res.message || 'Failed to reset password');
+  };
+
   const openAuthModal = (mode = 'login') => {
     setAuthModalMode(mode);
     setAuthModalOpen(true);
@@ -107,7 +123,9 @@ export const CustomerAuthProvider = ({ children }) => {
         closeMyOrdersModal,
         login,
         register,
-        logout
+        logout,
+        forgotPassword,
+        resetPassword
       }}
     >
       {children}

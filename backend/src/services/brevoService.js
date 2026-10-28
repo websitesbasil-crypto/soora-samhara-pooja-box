@@ -221,6 +221,50 @@ class BrevoService {
     });
   }
 
+  async sendPasswordResetOtp({ toEmail, toName, otpCode }) {
+    if (!toEmail) return null;
+
+    const subject = `${otpCode} is your Sri Sankara TV Password Reset Code`;
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E4D6BA; border-radius: 8px; background-color: #FFFDF9;">
+        <div style="text-align: center; border-bottom: 2px solid #E4B655; padding-bottom: 16px; margin-bottom: 20px;">
+          <h2 style="color: #4A0F1B; margin: 0; font-size: 22px;">ஸ்ரீ சங்கரா டிவி • சத்ரு சம்ஹார மஹா யாகம்</h2>
+          <p style="color: #8C2D19; margin: 6px 0 0; font-size: 14px; font-weight: bold;">Sri Sankara TV Devotional Services</p>
+        </div>
+
+        <p style="color: #333333; font-size: 15px;">Dear Devotee${toName ? ` <strong>${toName}</strong>` : ''},</p>
+        <p style="color: #555555; font-size: 14px; line-height: 1.6;">
+          We received a request to reset your password for your devotee account on Sri Sankara TV. Please use the 6-digit verification code below:
+        </p>
+
+        <div style="text-align: center; margin: 28px 0;">
+          <div style="display: inline-block; background: #3A0E18; color: #E4B655; font-size: 32px; font-weight: bold; letter-spacing: 8px; padding: 14px 28px; border-radius: 8px; border: 1px solid #E4B655;">
+            ${otpCode}
+          </div>
+          <p style="color: #888888; font-size: 13px; margin-top: 10px;">This code is valid for <strong>15 minutes</strong>.</p>
+        </div>
+
+        <p style="color: #666666; font-size: 13px; line-height: 1.5;">
+          If you did not request this password reset, you can safely ignore this email. Your account password will remain unchanged.
+        </p>
+
+        <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid #EFE4D2; font-size: 12px; color: #888888; text-align: center;">
+          <p style="margin: 0;">May the blessings of Lord Murugan always be upon you and your family.</p>
+          <p style="margin: 4px 0 0; font-weight: bold; color: #4A0F1B;">Sri Sankara TV Support Desk</p>
+        </div>
+      </div>
+    `;
+
+    return this.sendEmail({
+      toEmail,
+      toName: toName || 'Devotee',
+      subject,
+      htmlContent,
+      templateType: EMAIL_TEMPLATES.PASSWORD_RESET_OTP,
+      order: null
+    });
+  }
+
   async retryEmail(emailLogId) {
     const emailLog = await EmailLog.findById(emailLogId).populate('orderId');
     if (!emailLog) {

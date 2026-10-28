@@ -20,7 +20,10 @@ import {
   Phone,
   Mail,
   User,
-  AlertTriangle
+  AlertTriangle,
+  PlusCircle,
+  Sparkles,
+  Lock
 } from 'lucide-react';
 
 export const OrdersPage = () => {
@@ -43,6 +46,109 @@ export const OrdersPage = () => {
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  // Manual Booking Creation Modal State
+  const [isManualModalOpen, setIsManualModalOpen] = useState(false);
+  const [manualForm, setManualForm] = useState({
+    customerName: '',
+    customerPhone: '',
+    customerEmail: '',
+    password: '',
+    address: '',
+    city: 'Chennai',
+    state: 'Tamil Nadu',
+    pincode: '',
+    quantity: 1,
+    amountInRupees: 2500,
+    paymentReference: '',
+    paymentMethod: 'manual_admin',
+    sankalpamDetails: [
+      { name: '', natchathiram: '' },
+      { name: '', natchathiram: '' },
+      { name: '', natchathiram: '' },
+      { name: '', natchathiram: '' }
+    ]
+  });
+  const [isCreatingManual, setIsCreatingManual] = useState(false);
+  const [manualError, setManualError] = useState('');
+
+  const handleManualFormChange = (field, value) => {
+    setManualForm((prev) => ({ ...prev, [field]: value }));
+    setManualError('');
+  };
+
+  const handleSankalpamChange = (index, field, value) => {
+    setManualForm((prev) => {
+      const updated = [...prev.sankalpamDetails];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, sankalpamDetails: updated };
+    });
+  };
+
+  const handleCreateManualBooking = async (e) => {
+    e.preventDefault();
+    if (!manualForm.customerName.trim()) {
+      setManualError('Please enter Devotee Full Name.');
+      return;
+    }
+    const cleanPhone = manualForm.customerPhone.trim().replace(/[\s-]/g, '').replace(/^(?:\+?91)/, '');
+    if (!cleanPhone || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+      setManualError('Please enter a valid 10-digit Indian mobile number.');
+      return;
+    }
+    if (!manualForm.address.trim()) {
+      setManualError('Please enter the delivery street address.');
+      return;
+    }
+    if (!manualForm.pincode.trim() || !/^\d{6}$/.test(manualForm.pincode.trim())) {
+      setManualError('Please enter a valid 6-digit PIN code.');
+      return;
+    }
+    if (manualForm.password && manualForm.password.length < 6) {
+      setManualError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    setIsCreatingManual(true);
+    setManualError('');
+    try {
+      const res = await adminService.createManualOrder({
+        ...manualForm,
+        customerPhone: cleanPhone,
+        sankalpamDetails: manualForm.sankalpamDetails.filter(p => p.name.trim() || p.natchathiram.trim())
+      });
+      if (res.success) {
+        setToastMessage(`Booking created successfully! Order: ${res.data?.orderNumber || 'Created'}`);
+        setIsManualModalOpen(false);
+        setManualForm({
+          customerName: '',
+          customerPhone: '',
+          customerEmail: '',
+          password: '',
+          address: '',
+          city: 'Chennai',
+          state: 'Tamil Nadu',
+          pincode: '',
+          quantity: 1,
+          amountInRupees: 2500,
+          paymentReference: '',
+          paymentMethod: 'manual_admin',
+          sankalpamDetails: [
+            { name: '', natchathiram: '' },
+            { name: '', natchathiram: '' },
+            { name: '', natchathiram: '' },
+            { name: '', natchathiram: '' }
+          ]
+        });
+        setTimeout(() => setToastMessage(''), 4000);
+        fetchOrders(1);
+      }
+    } catch (err) {
+      setManualError(err.message || 'Failed to create manual order');
+    } finally {
+      setIsCreatingManual(false);
+    }
+  };
 
   const fetchOrders = async (page = 1) => {
     setLoading(true);
@@ -144,7 +250,10 @@ export const OrdersPage = () => {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <Button variant="primary" onClick={() => setIsManualModalOpen(true)}>
+            <PlusCircle size={15} style={{ marginRight: 6 }} /> Manual Booking Creation
+          </Button>
           <Button variant="secondary" onClick={handleExportCSV}>
             <Download size={15} style={{ marginRight: 6 }} /> Export CSV
           </Button>
@@ -635,6 +744,394 @@ export const OrdersPage = () => {
               </button>
             </div>
           </div>
+        </Modal>
+      )}
+
+      {/* MANUAL BOOKING CREATION MODAL */}
+      {isManualModalOpen && (
+        <Modal
+          isOpen={isManualModalOpen}
+          onClose={() => !isCreatingManual && setIsManualModalOpen(false)}
+          title="Manual Booking Creation"
+          maxWidth={720}
+        >
+          <form onSubmit={handleCreateManualBooking}>
+            <p style={{ color: '#64748B', fontSize: '0.88rem', margin: '-8px 0 16px', lineHeight: 1.4 }}>
+              Register a customer order manually. This creates the devotee's account, records the ₹2,500 payment, and makes the booking visible under <strong>"MY POOJA BOX BOOKING"</strong> on the website.
+            </p>
+
+            {manualError && (
+              <div
+                style={{
+                  background: '#FEF2F2',
+                  border: '1px solid #FCA5A5',
+                  color: '#991B1B',
+                  padding: '10px 14px',
+                  borderRadius: 6,
+                  fontSize: '0.85rem',
+                  marginBottom: 16
+                }}
+              >
+                {manualError}
+              </div>
+            )}
+
+            <div style={{ maxHeight: '68vh', overflowY: 'auto', paddingRight: 6 }}>
+              {/* SECTION 1: DEVOTEE & ACCOUNT CREDENTIALS */}
+              <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 8, padding: '14px 16px', marginBottom: 16 }}>
+                <h4 style={{ margin: '0 0 12px', fontSize: '0.95rem', color: '#1E293B', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <User size={16} color="#7C2D12" /> Devotee Information & Login Credentials
+                </h4>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={manualForm.customerName}
+                      onChange={(e) => handleManualFormChange('customerName', e.target.value)}
+                      placeholder="e.g. Ramakrishnan"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Mobile Phone (10 Digits) *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={manualForm.customerPhone}
+                      onChange={(e) => handleManualFormChange('customerPhone', e.target.value)}
+                      placeholder="e.g. 9480363725"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value={manualForm.customerEmail}
+                      onChange={(e) => handleManualFormChange('customerEmail', e.target.value)}
+                      placeholder="e.g. lakkrish2009@gmail.com"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Account Password * <span style={{ fontSize: '0.72rem', color: '#64748B' }}>(For devotee to log in)</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={manualForm.password}
+                      onChange={(e) => handleManualFormChange('password', e.target.value)}
+                      placeholder="e.g. Sankara2026"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 2: DELIVERY ADDRESS */}
+              <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 8, padding: '14px 16px', marginBottom: 16 }}>
+                <h4 style={{ margin: '0 0 12px', fontSize: '0.95rem', color: '#1E293B', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <MapPin size={16} color="#7C2D12" /> Delivery Street Address
+                </h4>
+
+                <div style={{ marginBottom: 12 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                    Complete Street Address *
+                  </label>
+                  <textarea
+                    required
+                    rows={2}
+                    value={manualForm.address}
+                    onChange={(e) => handleManualFormChange('address', e.target.value)}
+                    placeholder="Door/Flat No., Building, Street Name, Area"
+                    style={{
+                      width: '100%',
+                      padding: '8px 10px',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: 4,
+                      fontSize: '0.9rem',
+                      fontFamily: 'inherit'
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      City *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={manualForm.city}
+                      onChange={(e) => handleManualFormChange('city', e.target.value)}
+                      placeholder="e.g. Chennai"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      State *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={manualForm.state}
+                      onChange={(e) => handleManualFormChange('state', e.target.value)}
+                      placeholder="e.g. Tamil Nadu"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      6-Digit PIN Code *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      maxLength={6}
+                      value={manualForm.pincode}
+                      onChange={(e) => handleManualFormChange('pincode', e.target.value)}
+                      placeholder="e.g. 600001"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 3: SANKALPAM & ARCHANA DETAILS */}
+              <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 8, padding: '14px 16px', marginBottom: 16 }}>
+                <h4 style={{ margin: '0 0 6px', fontSize: '0.95rem', color: '#92400E', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Sparkles size={16} color="#D97706" /> Sankalpam & Archana Details (ஸங்கல்பம் & அர்ச்சனை)
+                </h4>
+                <p style={{ margin: '0 0 12px', fontSize: '0.8rem', color: '#78350F' }}>
+                  Enter up to 4 family members' Names and Natchathirams (Birth Star) for the holy yagam.
+                </p>
+
+                {manualForm.sankalpamDetails.map((person, idx) => (
+                  <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 8 }}>
+                    <div>
+                      <input
+                        type="text"
+                        value={person.name}
+                        onChange={(e) => handleSankalpamChange(idx, 'name', e.target.value)}
+                        placeholder={`Member ${idx + 1} Name`}
+                        style={{
+                          width: '100%',
+                          padding: '7px 10px',
+                          border: '1px solid #FCD34D',
+                          borderRadius: 4,
+                          fontSize: '0.85rem',
+                          background: '#fff'
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        value={person.natchathiram}
+                        onChange={(e) => handleSankalpamChange(idx, 'natchathiram', e.target.value)}
+                        placeholder={`Member ${idx + 1} Natchathiram (e.g. Rohini)`}
+                        style={{
+                          width: '100%',
+                          padding: '7px 10px',
+                          border: '1px solid #FCD34D',
+                          borderRadius: 4,
+                          fontSize: '0.85rem',
+                          background: '#fff'
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* SECTION 4: PAYMENT & PRICING */}
+              <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 8, padding: '14px 16px', marginBottom: 16 }}>
+                <h4 style={{ margin: '0 0 12px', fontSize: '0.95rem', color: '#1E293B', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <IndianRupee size={16} color="#7C2D12" /> Order & Payment Details
+                </h4>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Number of Boxes (Quantity)
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={20}
+                      value={manualForm.quantity}
+                      onChange={(e) => handleManualFormChange('quantity', e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Amount Paid (₹) * <span style={{ fontSize: '0.72rem', color: '#16A34A' }}>(Reflected everywhere)</span>
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min={0}
+                      step="any"
+                      value={manualForm.amountInRupees}
+                      onChange={(e) => handleManualFormChange('amountInRupees', e.target.value)}
+                      placeholder="2500"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
+                        color: '#16A34A'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Payment Mode
+                    </label>
+                    <select
+                      value={manualForm.paymentMethod}
+                      onChange={(e) => handleManualFormChange('paymentMethod', e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem',
+                        background: '#fff'
+                      }}
+                    >
+                      <option value="manual_admin">Manual Admin Booking</option>
+                      <option value="upi">Direct UPI (Bank App / QR)</option>
+                      <option value="cash">Cash / Offline Collection</option>
+                      <option value="razorpay_manual">Razorpay Manual Reconcile</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: 4 }}>
+                      Payment ID / Reference
+                    </label>
+                    <input
+                      type="text"
+                      value={manualForm.paymentReference}
+                      onChange={(e) => handleManualFormChange('paymentReference', e.target.value)}
+                      placeholder="e.g. pay_Trn85EIORrZk0S"
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        border: '1px solid #CBD5E1',
+                        borderRadius: 4,
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* MODAL ACTION BUTTONS */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 16, borderTop: '1px solid #E2E8F0', paddingTop: 14 }}>
+              <Button
+                variant="secondary"
+                disabled={isCreatingManual}
+                onClick={() => setIsManualModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <button
+                type="submit"
+                disabled={isCreatingManual}
+                style={{
+                  background: '#D9731A',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 4,
+                  padding: '9px 20px',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  cursor: isCreatingManual ? 'not-allowed' : 'pointer',
+                  opacity: isCreatingManual ? 0.7 : 1,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  boxShadow: '0 2px 8px rgba(217, 115, 26, 0.3)'
+                }}
+              >
+                <CheckCircle size={16} />
+                {isCreatingManual ? 'Creating Order...' : 'Confirm & Create Booking'}
+              </button>
+            </div>
+          </form>
         </Modal>
       )}
     </div>

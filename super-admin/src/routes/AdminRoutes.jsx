@@ -5,6 +5,7 @@ import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import OrdersPage from '../pages/OrdersPage';
 import OrderDetailsPage from '../pages/OrderDetailsPage';
+import InquiriesPage from '../pages/InquiriesPage';
 import ProductsPage from '../pages/ProductsPage';
 import CustomersPage from '../pages/CustomersPage';
 import PaymentsPage from '../pages/PaymentsPage';
@@ -26,6 +27,7 @@ export default function AdminRoutes() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:id" element={<OrderDetailsPage />} />
+        <Route path="inquiries" element={<InquiriesPage />} />
         <Route path="products" element={<ProductsPage />} />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="payments" element={<PaymentsPage />} />

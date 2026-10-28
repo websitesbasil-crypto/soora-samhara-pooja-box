@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomerAuth } from '../../context/CustomerAuthContext';
 import { Spinner } from '../atoms/Spinner';
+import { ArrowLeft, KeyRound, Mail, CheckCircle2 } from 'lucide-react';
 
 export const AuthModal = () => {
-  const { authModalOpen, authModalMode, closeAuthModal, openAuthModal, login, register } = useCustomerAuth();
+  const { authModalOpen, authModalMode, closeAuthModal, login, register, forgotPassword, resetPassword } = useCustomerAuth();
 
-  const [mode, setMode] = useState(authModalMode || 'login'); // 'login' | 'register'
+  const [mode, setMode] = useState(authModalMode || 'login'); // 'login' | 'register' | 'forgot' | 'reset'
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,15 +14,35 @@ export const AuthModal = () => {
     identifier: '',
     password: ''
   });
+  
+  // Forgot / Reset password state
+  const [resetIdentifier, setResetIdentifier] = useState('');
+  const [maskedEmail, setMaskedEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(0);
+
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setMode(authModalMode || 'login');
     setSubmitError('');
+    setSuccessMsg('');
     setErrors({});
   }, [authModalMode, authModalOpen]);
+
+  // Cooldown countdown timer for OTP resend
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
 
   if (!authModalOpen) return null;
 
@@ -42,7 +63,7 @@ export const AuthModal = () => {
       if (!formData.password) {
         errs.password = 'Please enter your password.';
       }
-    } else {
+    } else if (mode === 'register') {
       if (!formData.name.trim() || formData.name.trim().length < 2) {
         errs.name = 'Please enter your full name (at least 2 characters).';
       }
@@ -56,6 +77,20 @@ export const AuthModal = () => {
       if (!formData.password || formData.password.length < 6) {
         errs.password = 'Password must be at least 6 characters.';
       }
+    } else if (mode === 'forgot') {
+      if (!resetIdentifier.trim()) {
+        errs.resetIdentifier = 'Please enter your registered email or 10-digit mobile number.';
+      }
+    } else if (mode === 'reset') {
+      if (!otpCode.trim() || otpCode.trim().length !== 6) {
+        errs.otpCode = 'Please enter the 6-digit verification code sent to your email.';
+      }
+      if (!newPassword || newPassword.length < 6) {
+        errs.newPassword = 'New password must be at least 6 characters long.';
+      }
+      if (newPassword !== confirmPassword) {
+        errs.confirmPassword = 'Passwords do not match.';
+      }
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -67,6 +102,7 @@ export const AuthModal = () => {
 
     setIsSubmitting(true);
     setSubmitError('');
+    setSuccessMsg('');
 
     try {
       if (mode === 'login') {
@@ -74,16 +110,49 @@ export const AuthModal = () => {
           identifier: formData.identifier.trim(),
           password: formData.password
         });
-      } else {
+      } else if (mode === 'register') {
         await register({
           name: formData.name.trim(),
           email: formData.email.trim(),
           phone: formData.phone.trim().replace(/[\s-]/g, '').replace(/^(?:\+?91)/, ''),
           password: formData.password
         });
+      } else if (mode === 'forgot') {
+        const res = await forgotPassword({ identifier: resetIdentifier.trim() });
+        setMaskedEmail(res.maskedEmail || res.identifier || resetIdentifier);
+        setSuccessMsg(res.message || '6-digit verification code sent to your email.');
+        setResendCooldown(60);
+        setMode('reset');
+      } else if (mode === 'reset') {
+        const res = await resetPassword({
+          identifier: resetIdentifier.trim(),
+          otpCode: otpCode.trim(),
+          newPassword
+        });
+        setSuccessMsg(res.message || 'Password updated successfully! Please sign in.');
+        setFormData((prev) => ({ ...prev, identifier: resetIdentifier.trim(), password: '' }));
+        setOtpCode('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setMode('login');
       }
     } catch (err) {
-      setSubmitError(err.message || 'Authentication failed. Please check your credentials.');
+      setSubmitError(err.message || 'Action failed. Please check your details and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0 || isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      const res = await forgotPassword({ identifier: resetIdentifier.trim() });
+      setSuccessMsg('A fresh 6-digit verification code has been sent to your email.');
+      setResendCooldown(60);
+    } catch (err) {
+      setSubmitError(err.message || 'Failed to resend verification code.');
     } finally {
       setIsSubmitting(false);
     }
@@ -154,66 +223,93 @@ export const AuthModal = () => {
           </p>
           <h2 style={{
             fontFamily: 'var(--font-display, Georgia, serif)',
-            fontSize: '1.5rem',
+            fontSize: '1.45rem',
             color: '#F6EBD6',
             margin: 0,
             fontWeight: 400
           }}>
-            {mode === 'login' ? 'Devotee Sign In' : 'Create Devotee Account'}
+            {mode === 'login' && 'Devotee Sign In'}
+            {mode === 'register' && 'Create Devotee Account'}
+            {mode === 'forgot' && 'Reset Your Password'}
+            {mode === 'reset' && 'Enter Verification Code'}
           </h2>
-          <p style={{ fontSize: '0.85rem', color: '#D8C3A5', marginTop: 6 }}>
-            {mode === 'login'
-              ? 'Sign in to reserve and track your blessed Sathru Samhara Maha Yagam.'
-              : 'Sign up with your email, mobile number and password to place your order.'}
+          <p style={{ fontSize: '0.84rem', color: '#D8C3A5', marginTop: 6 }}>
+            {mode === 'login' && 'Sign in to reserve and track your blessed Sathru Samhara Maha Yagam.'}
+            {mode === 'register' && 'Sign up with your email, mobile number and password to place your order.'}
+            {mode === 'forgot' && 'Enter your registered email address or mobile number to receive a 6-digit verification code.'}
+            {mode === 'reset' && (maskedEmail ? `Enter the 6-digit code sent to ${maskedEmail} and choose a new password.` : 'Enter the 6-digit code sent to your email.')}
           </p>
         </div>
 
-        {/* Mode Switch Tabs */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            background: 'rgba(0, 0, 0, 0.3)',
-            borderRadius: 4,
-            padding: 3,
-            marginBottom: 20
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => { setMode('login'); setSubmitError(''); }}
+        {/* Mode Switch Tabs (Only for login and register) */}
+        {(mode === 'login' || mode === 'register') && (
+          <div
             style={{
-              padding: '8px 12px',
-              border: 'none',
-              borderRadius: 3,
-              background: mode === 'login' ? '#E4B655' : 'transparent',
-              color: mode === 'login' ? '#2B1B18' : '#D8C3A5',
-              fontWeight: 700,
-              fontSize: '0.88rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: 4,
+              padding: 3,
+              marginBottom: 20
             }}
           >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => { setMode('register'); setSubmitError(''); }}
+            <button
+              type="button"
+              onClick={() => { setMode('login'); setSubmitError(''); setSuccessMsg(''); }}
+              style={{
+                padding: '8px 12px',
+                border: 'none',
+                borderRadius: 3,
+                background: mode === 'login' ? '#E4B655' : 'transparent',
+                color: mode === 'login' ? '#2B1B18' : '#D8C3A5',
+                fontWeight: 700,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => { setMode('register'); setSubmitError(''); setSuccessMsg(''); }}
+              style={{
+                padding: '8px 12px',
+                border: 'none',
+                borderRadius: 3,
+                background: mode === 'register' ? '#E4B655' : 'transparent',
+                color: mode === 'register' ? '#2B1B18' : '#D8C3A5',
+                fontWeight: 700,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Create Account
+            </button>
+          </div>
+        )}
+
+        {/* Success Alert */}
+        {successMsg && (
+          <div
             style={{
-              padding: '8px 12px',
-              border: 'none',
-              borderRadius: 3,
-              background: mode === 'register' ? '#E4B655' : 'transparent',
-              color: mode === 'register' ? '#2B1B18' : '#D8C3A5',
-              fontWeight: 700,
-              fontSize: '0.88rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              background: 'rgba(22, 101, 52, 0.3)',
+              border: '1px solid #4ADE80',
+              color: '#BBF7D0',
+              padding: '10px 14px',
+              borderRadius: 4,
+              fontSize: '0.85rem',
+              marginBottom: 16,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8
             }}
           >
-            Create Account
-          </button>
-        </div>
+            <CheckCircle2 size={16} />
+            <span>{successMsg}</span>
+          </div>
+        )}
 
         {/* Error Alert */}
         {submitError && (
@@ -232,35 +328,34 @@ export const AuthModal = () => {
           </div>
         )}
 
-        {/* Auth Form */}
+        {/* Auth Forms */}
         <form onSubmit={handleSubmit} noValidate>
+          {/* REGISTER MODE */}
           {mode === 'register' && (
-            <div style={{ marginBottom: 14 }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
-                Devotee Full Name *
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={handleChange('name')}
-                placeholder="e.g. Sriram Kalaikumar"
-                autoComplete="name"
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: errors.name ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
-                  borderRadius: 4,
-                  color: '#FFFFFF',
-                  fontSize: '0.95rem'
-                }}
-              />
-              {errors.name && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.name}</p>}
-            </div>
-          )}
-
-          {mode === 'register' ? (
             <>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
+                  Devotee Full Name *
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange('name')}
+                  placeholder="e.g. Sriram Kalaikumar"
+                  autoComplete="name"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.name ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#FFFFFF',
+                    fontSize: '0.95rem'
+                  }}
+                />
+                {errors.name && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.name}</p>}
+              </div>
+
               <div style={{ marginBottom: 14 }}>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
                   Mobile Number (10 Digits) *
@@ -307,55 +402,249 @@ export const AuthModal = () => {
                 />
                 {errors.email && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.email}</p>}
               </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
+                  Password * <span style={{ color: '#D8C3A5', fontWeight: 400 }}>(min. 6 chars)</span>
+                </label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange('password')}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.password ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#FFFFFF',
+                    fontSize: '0.95rem'
+                  }}
+                />
+                {errors.password && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.password}</p>}
+              </div>
             </>
-          ) : (
-            <div style={{ marginBottom: 14 }}>
+          )}
+
+          {/* LOGIN MODE */}
+          {mode === 'login' && (
+            <>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
+                  Email Address or 10-Digit Mobile *
+                </label>
+                <input
+                  type="text"
+                  value={formData.identifier}
+                  onChange={handleChange('identifier')}
+                  placeholder="Enter email or mobile number"
+                  autoComplete="username"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.identifier ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#FFFFFF',
+                    fontSize: '0.95rem'
+                  }}
+                />
+                {errors.identifier && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.identifier}</p>}
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                  <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6' }}>
+                    Password *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setResetIdentifier(formData.identifier || '');
+                      setSubmitError('');
+                      setSuccessMsg('');
+                      setErrors({});
+                      setMode('forgot');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#E4B655',
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange('password')}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.password ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#FFFFFF',
+                    fontSize: '0.95rem'
+                  }}
+                />
+                {errors.password && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.password}</p>}
+              </div>
+            </>
+          )}
+
+          {/* FORGOT PASSWORD MODE */}
+          {mode === 'forgot' && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                <Mail size={18} color="#E4B655" />
+                <span style={{ fontSize: '0.88rem', color: '#E4B655', fontWeight: 600 }}>
+                  Enter your registered contact details:
+                </span>
+              </div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
                 Email Address or 10-Digit Mobile *
               </label>
               <input
                 type="text"
-                value={formData.identifier}
-                onChange={handleChange('identifier')}
-                placeholder="Enter email or mobile number"
-                autoComplete="username"
+                value={resetIdentifier}
+                onChange={(e) => {
+                  setResetIdentifier(e.target.value);
+                  setErrors((prev) => ({ ...prev, resetIdentifier: '' }));
+                  setSubmitError('');
+                }}
+                placeholder="e.g. devotee@example.com or 9876543210"
+                autoComplete="email"
                 style={{
                   width: '100%',
                   padding: '10px 12px',
                   background: 'rgba(255, 255, 255, 0.08)',
-                  border: errors.identifier ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                  border: errors.resetIdentifier ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
                   borderRadius: 4,
                   color: '#FFFFFF',
                   fontSize: '0.95rem'
                 }}
               />
-              {errors.identifier && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.identifier}</p>}
+              {errors.resetIdentifier && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.resetIdentifier}</p>}
+              <p style={{ fontSize: '0.78rem', color: '#D8C3A5', marginTop: 6 }}>
+                A 6-digit verification code will be sent to the email address registered with this account.
+              </p>
             </div>
           )}
 
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
-              Password * {mode === 'register' && <span style={{ color: '#D8C3A5', fontWeight: 400 }}>(min. 6 chars)</span>}
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={handleChange('password')}
-              placeholder="••••••••"
-              autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: errors.password ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
-                borderRadius: 4,
-                color: '#FFFFFF',
-                fontSize: '0.95rem'
-              }}
-            />
-            {errors.password && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.password}</p>}
-          </div>
+          {/* RESET PASSWORD (ENTER 6-DIGIT CODE + NEW PASSWORD) */}
+          {mode === 'reset' && (
+            <>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                  <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6' }}>
+                    6-Digit Verification Code *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleResendOtp}
+                    disabled={resendCooldown > 0 || isSubmitting}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: resendCooldown > 0 ? '#9CA3AF' : '#E4B655',
+                      fontSize: '0.78rem',
+                      cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                      textDecoration: resendCooldown > 0 ? 'none' : 'underline'
+                    }}
+                  >
+                    {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend code'}
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  maxLength={6}
+                  value={otpCode}
+                  onChange={(e) => {
+                    setOtpCode(e.target.value.replace(/\D/g, ''));
+                    setErrors((prev) => ({ ...prev, otpCode: '' }));
+                  }}
+                  placeholder="123456"
+                  inputMode="numeric"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    textAlign: 'center',
+                    letterSpacing: '8px',
+                    fontWeight: 700,
+                    fontSize: '1.25rem',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.otpCode ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#E4B655'
+                  }}
+                />
+                {errors.otpCode && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.otpCode}</p>}
+              </div>
 
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
+                  New Password * <span style={{ color: '#D8C3A5', fontWeight: 400 }}>(min. 6 chars)</span>
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    setErrors((prev) => ({ ...prev, newPassword: '' }));
+                  }}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.newPassword ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#FFFFFF',
+                    fontSize: '0.95rem'
+                  }}
+                />
+                {errors.newPassword && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.newPassword}</p>}
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#F6EBD6', marginBottom: 4 }}>
+                  Confirm New Password *
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setErrors((prev) => ({ ...prev, confirmPassword: '' }));
+                  }}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: errors.confirmPassword ? '1px solid #FF8F86' : '1px solid rgba(228, 182, 85, 0.35)',
+                    borderRadius: 4,
+                    color: '#FFFFFF',
+                    fontSize: '0.95rem'
+                  }}
+                />
+                {errors.confirmPassword && <p style={{ color: '#FF8F86', fontSize: '0.78rem', margin: '4px 0 0' }}>{errors.confirmPassword}</p>}
+              </div>
+            </>
+          )}
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}
@@ -377,18 +666,21 @@ export const AuthModal = () => {
             }}
           >
             {isSubmitting && <Spinner size="small" />}
-            {mode === 'login' ? 'Sign In as Devotee' : 'Create Account & Continue'}
+            {mode === 'login' && 'Sign In as Devotee'}
+            {mode === 'register' && 'Create Account & Continue'}
+            {mode === 'forgot' && 'Send 6-Digit Code'}
+            {mode === 'reset' && 'Update Password'}
           </button>
         </form>
 
-        {/* Footer Toggle */}
+        {/* Footer Navigation */}
         <div style={{ textAlign: 'center', marginTop: 18, fontSize: '0.85rem', color: '#D8C3A5' }}>
-          {mode === 'login' ? (
+          {mode === 'login' && (
             <>
               First time devotee?{' '}
               <button
                 type="button"
-                onClick={() => { setMode('register'); setSubmitError(''); }}
+                onClick={() => { setMode('register'); setSubmitError(''); setSuccessMsg(''); }}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -401,12 +693,14 @@ export const AuthModal = () => {
                 Create an account
               </button>
             </>
-          ) : (
+          )}
+
+          {mode === 'register' && (
             <>
               Already have an account?{' '}
               <button
                 type="button"
-                onClick={() => { setMode('login'); setSubmitError(''); }}
+                onClick={() => { setMode('login'); setSubmitError(''); setSuccessMsg(''); }}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -419,6 +713,25 @@ export const AuthModal = () => {
                 Sign in here
               </button>
             </>
+          )}
+
+          {(mode === 'forgot' || mode === 'reset') && (
+            <button
+              type="button"
+              onClick={() => { setMode('login'); setSubmitError(''); setSuccessMsg(''); }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#E4B655',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6
+              }}
+            >
+              <ArrowLeft size={14} /> Back to Sign In
+            </button>
           )}
         </div>
       </div>

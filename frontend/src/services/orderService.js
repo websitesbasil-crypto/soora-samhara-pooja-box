@@ -11,5 +11,9 @@ export const orderService = {
 
   getOrderStatus: async (orderNumber) => {
     return api.get(`/orders/${orderNumber}/status`);
+  },
+
+  submitInquiry: async (data) => {
+    return api.post('/inquiries', data);
   }
 };

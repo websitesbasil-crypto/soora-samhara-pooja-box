@@ -8,7 +8,8 @@ import {
   getAdminOrderById,
   updateOrderStatus,
   deleteAdminOrder,
-  exportOrdersCSV
+  exportOrdersCSV,
+  createManualOrder
 } from '../controllers/orderController.js';
 import { verifyAdminToken, requireRole } from '../middleware/auth.js';
 import { verifyCustomerToken, optionalCustomerToken } from '../middleware/customerAuth.js';
@@ -28,6 +29,7 @@ router.get('/customer/my-orders', getCustomerOrders);
 router.get('/:orderNumber/status', getOrderStatus);
 
 // Admin endpoints
+router.post('/admin/manual', verifyAdminToken, requireRole([ADMIN_ROLES.SUPER_ADMIN, ADMIN_ROLES.ORDER_MANAGER]), createManualOrder);
 router.get('/admin/list', verifyAdminToken, getAdminOrders);
 router.get('/admin/export-csv', verifyAdminToken, exportOrdersCSV);
 router.get('/admin/:id', verifyAdminToken, getAdminOrderById);

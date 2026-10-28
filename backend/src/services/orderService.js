@@ -1,9 +1,11 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 import Payment from '../models/Payment.js';
 import Customer from '../models/Customer.js';
+import AuditLog from '../models/AuditLog.js';
 import razorpayService from './razorpayService.js';
 import brevoService from './brevoService.js';
 import { ORDER_STATUS, PAYMENT_STATUS, DEFAULT_PRODUCT } from '../config/constants.js';
@@ -469,6 +471,214 @@ class OrderService {
     }
 
     return { received: true, eventType };
+  }
+
+  async createManualOrder({
+    customerName,
+    customerPhone,
+    customerEmail,
+    password,
+    address,
+    city,
+    state = 'Tamil Nadu',
+    pincode,
+    quantity = 1,
+    amountInRupees = 2500,
+    paymentReference = '',
+    paymentMethod = 'manual_admin',
+    sankalpamDetails = [],
+    adminUser
+  }) {
+    // 1. Validation
+    if (!customerName || customerName.trim().length < 2) {
+      throw new Error('Enter devotee full name (minimum 2 characters).');
+    }
+    if (!customerPhone || !this.validatePhone(customerPhone)) {
+      throw new Error('Enter a valid 10-digit Indian mobile number.');
+    }
+    if (!address || address.trim().length < 5) {
+      throw new Error('Enter delivery street address (minimum 5 characters).');
+    }
+    if (!city || city.trim().length < 2) {
+      throw new Error('Enter city.');
+    }
+    if (!pincode || !this.validatePincode(pincode)) {
+      throw new Error('Enter a valid 6-digit PIN code.');
+    }
+
+    const cleanPhone = this.normalizePhone(customerPhone);
+    const cleanEmail = customerEmail ? customerEmail.trim().toLowerCase() : `${cleanPhone}@srisankara.shop`;
+    const qty = parseInt(quantity, 10) || 1;
+    const totalAmountInPaise = Math.round((parseFloat(amountInRupees) || 2500) * 100);
+    const unitPriceInPaise = Math.round(totalAmountInPaise / qty);
+
+    // 2. Resolve Active Product
+    const product = await this.getActiveProduct();
+    if (!product) {
+      throw new Error('Active product not found in database.');
+    }
+
+    // 3. Upsert Customer with Password
+    let customer = await Customer.findOne({
+      $or: [
+        { phone: cleanPhone },
+        ...(customerEmail ? [{ email: cleanEmail }] : [])
+      ]
+    });
+
+    if (customer) {
+      if (password && password.trim().length >= 6) {
+        customer.passwordHash = await bcrypt.hash(password.trim(), 10);
+      }
+      if (customerEmail && (!customer.email || customer.email.includes('@srisankara.shop'))) {
+        customer.email = cleanEmail;
+      }
+      customer.name = customerName.trim();
+      customer.totalOrders += 1;
+      customer.totalSpentInPaise += totalAmountInPaise;
+      customer.lastOrderAt = new Date();
+      await customer.save();
+    } else {
+      const passwordHash = password && password.trim().length >= 6
+        ? await bcrypt.hash(password.trim(), 10)
+        : await bcrypt.hash('Sankara2026', 10);
+
+      customer = new Customer({
+        name: customerName.trim(),
+        phone: cleanPhone,
+        email: cleanEmail,
+        passwordHash,
+        addresses: [{
+          address: address.trim(),
+          city: city.trim(),
+          state: (state || 'Tamil Nadu').trim(),
+          pincode: pincode.trim()
+        }],
+        totalOrders: 1,
+        totalSpentInPaise: totalAmountInPaise,
+        lastOrderAt: new Date()
+      });
+      await customer.save();
+    }
+
+    // 4. Sanitize Sankalpam Details
+    let cleanSankalpamDetails = [];
+    if (Array.isArray(sankalpamDetails)) {
+      cleanSankalpamDetails = sankalpamDetails
+        .slice(0, 4)
+        .map(person => ({
+          name: typeof person?.name === 'string' ? person.name.trim() : '',
+          natchathiram: typeof person?.natchathiram === 'string' ? person.natchathiram.trim() : ''
+        }))
+        .filter(person => person.name.length > 0 || person.natchathiram.length > 0);
+    }
+
+    // 5. Generate Order and Payment IDs
+    const orderNumber = this.generateOrderNumber();
+    const manualPaymentId = paymentReference?.trim() || `pay_manual_${crypto.randomBytes(5).toString('hex')}`;
+    const manualOrderId = `order_manual_${crypto.randomBytes(5).toString('hex')}`;
+
+    // 6. Create Order document
+    const order = new Order({
+      orderNumber,
+      customer: {
+        name: customerName.trim(),
+        phone: cleanPhone,
+        email: customer.email,
+        address: address.trim(),
+        city: city.trim(),
+        state: (state || 'Tamil Nadu').trim(),
+        pincode: pincode.trim()
+      },
+      sankalpamDetails: cleanSankalpamDetails,
+      customerId: customer._id,
+      productId: product._id,
+      productName: product.name,
+      quantity: qty,
+      unitPriceInPaise,
+      subtotalInPaise: totalAmountInPaise,
+      deliveryChargeInPaise: 0,
+      discountInPaise: 0,
+      totalAmountInPaise,
+      currency: 'INR',
+      paymentStatus: PAYMENT_STATUS.PAID,
+      orderStatus: ORDER_STATUS.PAID,
+      razorpayOrderId: manualOrderId,
+      razorpayPaymentId: manualPaymentId,
+      timeline: [
+        {
+          status: ORDER_STATUS.CREATED,
+          note: `Manual booking created by Admin (${adminUser?.name || 'Super Admin'}).`,
+          timestamp: new Date(),
+          updatedBy: adminUser?.name || 'Super Admin'
+        },
+        {
+          status: ORDER_STATUS.PAID,
+          note: `Payment confirmed directly via Admin (Amount: ₹${totalAmountInPaise / 100}, Ref: ${paymentReference || 'Manual/Offline'}).`,
+          timestamp: new Date(),
+          updatedBy: adminUser?.name || 'Super Admin'
+        }
+      ]
+    });
+    await order.save();
+
+    // 7. Create Payment document
+    const internalPaymentId = `PAY-${order.orderNumber}-MANUAL`;
+    const payment = new Payment({
+      internalPaymentId,
+      orderId: order._id,
+      orderNumber: order.orderNumber,
+      razorpayOrderId: manualOrderId,
+      razorpayPaymentId: manualPaymentId,
+      amountInPaise: totalAmountInPaise,
+      currency: 'INR',
+      status: PAYMENT_STATUS.CAPTURED,
+      method: paymentMethod || 'manual_admin',
+      email: customer.email,
+      contact: cleanPhone,
+      verifiedAt: new Date(),
+      isReconciled: true,
+      reconciledAt: new Date(),
+      rawGatewayResponse: {
+        manualBooking: true,
+        createdBy: adminUser?.name || 'Super Admin',
+        reference: paymentReference || null
+      }
+    });
+    await payment.save();
+
+    // 8. Brevo Transactional Email Alert
+    try {
+      if (customer.email && !customer.email.includes('@srisankara.shop')) {
+        await brevoService.sendOrderConfirmation(order);
+      }
+    } catch (emailErr) {
+      console.warn('[OrderService] Email error on manual order creation:', emailErr.message);
+    }
+
+    // 9. Audit Log
+    try {
+      if (adminUser) {
+        await AuditLog.create({
+          adminUserId: adminUser._id,
+          adminEmail: adminUser.email,
+          action: 'CREATE_MANUAL_ORDER',
+          targetModel: 'Order',
+          targetId: order._id,
+          details: {
+            orderNumber: order.orderNumber,
+            customerName: customer.name,
+            customerPhone: customer.phone,
+            amountInRupees: totalAmountInPaise / 100,
+            paymentReference
+          }
+        });
+      }
+    } catch (auditErr) {
+      console.warn('[OrderService] Audit log error:', auditErr.message);
+    }
+
+    return order;
   }
 }
 

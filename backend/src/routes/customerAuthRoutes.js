@@ -5,7 +5,9 @@ import {
   loginCustomer,
   logoutCustomer,
   getMe,
-  getMyOrders
+  getMyOrders,
+  forgotPassword,
+  resetPassword
 } from '../controllers/customerAuthController.js';
 import { verifyCustomerToken } from '../middleware/customerAuth.js';
 
@@ -20,6 +22,8 @@ const authLimiter = rateLimit({
 router.post('/register', authLimiter, registerCustomer);
 router.post('/login', authLimiter, loginCustomer);
 router.post('/logout', logoutCustomer);
+router.post('/forgot-password', authLimiter, forgotPassword);
+router.post('/reset-password', authLimiter, resetPassword);
 router.get('/me', verifyCustomerToken, getMe);
 router.get('/my-orders', verifyCustomerToken, getMyOrders);
 

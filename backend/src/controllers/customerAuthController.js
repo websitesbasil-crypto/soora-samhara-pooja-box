@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Customer from '../models/Customer.js';
 import Order from '../models/Order.js';
+import brevoService from '../services/brevoService.js';
 
 const JWT_SECRET = process.env.CUSTOMER_JWT_SECRET || process.env.ADMIN_JWT_SECRET || 'super_secret_jwt_key_sri_sankara_tv_2026_dev_mode';
 const TOKEN_EXPIRY = '30d';
@@ -210,5 +211,142 @@ export const getMyOrders = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { identifier } = req.body;
+    if (!identifier || !identifier.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide your registered email address or 10-digit mobile number.'
+      });
+    }
+
+    const raw = identifier.trim();
+    const cleanPhone = raw.replace(/[\s-]/g, '').replace(/^(?:\+?91)/, '');
+    const cleanEmail = raw.toLowerCase();
+
+    const customer = await Customer.findOne({
+      $or: [
+        { email: cleanEmail },
+        { phone: cleanPhone }
+      ]
+    });
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        message: 'No devotee account found with this email or mobile number.'
+      });
+    }
+
+    if (!customer.email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Your account does not have an email address associated with it. Please contact support.'
+      });
+    }
+
+    // Generate 6-digit numeric OTP code
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    customer.resetPasswordOtp = otpCode;
+    customer.resetPasswordExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+    await customer.save();
+
+    // Send email via Brevo
+    try {
+      await brevoService.sendPasswordResetOtp({
+        toEmail: customer.email,
+        toName: customer.name,
+        otpCode
+      });
+    } catch (emailErr) {
+      console.error('[CustomerAuth] Error sending reset email:', emailErr);
+    }
+
+    // Mask email for display: e.g. "s***n@gmail.com"
+    const [userPart, domainPart] = customer.email.split('@');
+    const maskedUser = userPart.length > 2
+      ? `${userPart[0]}${'*'.repeat(Math.max(1, userPart.length - 2))}${userPart[userPart.length - 1]}`
+      : `${userPart[0]}*`;
+    const maskedEmail = `${maskedUser}@${domainPart}`;
+
+    return res.status(200).json({
+      success: true,
+      message: `A 6-digit verification code has been sent to your email (${maskedEmail}).`,
+      identifier: customer.email,
+      maskedEmail
+    });
+  } catch (err) {
+    console.error('[CustomerAuth] Forgot password error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to process request. Please try again.' });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { identifier, otpCode, newPassword } = req.body;
+
+    if (!identifier || !otpCode || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Identifier, 6-digit verification code, and new password are required.'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 6 characters long.'
+      });
+    }
+
+    const raw = identifier.trim();
+    const cleanPhone = raw.replace(/[\s-]/g, '').replace(/^(?:\+?91)/, '');
+    const cleanEmail = raw.toLowerCase();
+
+    const customer = await Customer.findOne({
+      $or: [
+        { email: cleanEmail },
+        { phone: cleanPhone }
+      ]
+    });
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Devotee account not found.'
+      });
+    }
+
+    if (!customer.resetPasswordOtp || customer.resetPasswordOtp !== otpCode.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid 6-digit verification code. Please check your email and try again.'
+      });
+    }
+
+    if (!customer.resetPasswordExpires || new Date() > customer.resetPasswordExpires) {
+      return res.status(400).json({
+        success: false,
+        message: 'Verification code has expired. Please request a new code.'
+      });
+    }
+
+    // Set new password
+    customer.passwordHash = await bcrypt.hash(newPassword, 10);
+    customer.resetPasswordOtp = null;
+    customer.resetPasswordExpires = null;
+    await customer.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password updated successfully! Please sign in with your new password.'
+    });
+  } catch (err) {
+    console.error('[CustomerAuth] Reset password error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to reset password. Please try again.' });
   }
 };

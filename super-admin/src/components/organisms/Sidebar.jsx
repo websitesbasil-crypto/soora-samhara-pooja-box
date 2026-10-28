@@ -12,7 +12,8 @@ import {
   TrendingUp,
   ShieldCheck,
   Settings,
-  ExternalLink
+  ExternalLink,
+  MessageSquare
 } from 'lucide-react';
 
 export const Sidebar = ({ mobileOpen, onCloseMobile }) => {
@@ -21,6 +22,7 @@ export const Sidebar = ({ mobileOpen, onCloseMobile }) => {
   const links = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
+    { to: '/admin/inquiries', label: 'Contact Inquiries', icon: MessageSquare },
     { to: '/admin/products', label: 'Products & Pricing', icon: PackageCheck },
     { to: '/admin/customers', label: 'Customers', icon: Users },
     { to: '/admin/payments', label: 'Payments', icon: CreditCard },

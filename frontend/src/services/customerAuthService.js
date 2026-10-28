@@ -19,6 +19,14 @@ export const customerAuthService = {
 
   getMyOrders: async () => {
     return api.get('/auth/my-orders');
+  },
+
+  forgotPassword: async ({ identifier }) => {
+    return api.post('/auth/forgot-password', { identifier });
+  },
+
+  resetPassword: async ({ identifier, otpCode, newPassword }) => {
+    return api.post('/auth/reset-password', { identifier, otpCode, newPassword });
   }
 };
 

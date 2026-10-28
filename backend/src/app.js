@@ -10,6 +10,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import customerAuthRoutes from './routes/customerAuthRoutes.js';
+import inquiryRoutes from './routes/inquiryRoutes.js';
 
 const app = express();
 
@@ -95,6 +96,7 @@ app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/inquiries', inquiryRoutes);
 
 // 404 handler
 app.use((req, res) => {

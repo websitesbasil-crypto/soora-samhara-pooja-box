@@ -15,6 +15,7 @@ export const adminService = {
     return api.get(`/orders/admin/list${q ? `?${q}` : ''}`);
   },
   getOrderById: async (id) => api.get(`/orders/admin/${id}`),
+  createManualOrder: async (data) => api.post('/orders/admin/manual', data),
   updateOrderStatus: async (id, data) => api.patch(`/orders/admin/${id}/status`, data),
   deleteOrder: async (id) => api.delete(`/orders/admin/${id}`),
   exportOrdersCSV: async () => api.get('/orders/admin/export-csv'),
@@ -65,5 +66,13 @@ export const adminService = {
   getAuditLogs: async (params = {}) => {
     const q = new URLSearchParams(params).toString();
     return api.get(`/admin/audit-logs${q ? `?${q}` : ''}`);
-  }
+  },
+
+  // Devotee Inquiries
+  getInquiries: async (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return api.get(`/inquiries/admin/list${q ? `?${q}` : ''}`);
+  },
+  updateInquiryStatus: async (id, data) => api.patch(`/inquiries/admin/${id}/status`, data),
+  deleteInquiry: async (id) => api.delete(`/inquiries/admin/${id}`)
 };

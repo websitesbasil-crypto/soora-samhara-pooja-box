@@ -428,6 +428,7 @@ export const getCustomerOrders = async (req, res) => {
           paymentStatus: o.paymentStatus,
           orderStatus: o.orderStatus,
           customer: o.customer,
+          sankalpamDetails: o.sankalpamDetails || [],
           tracking: o.tracking,
           timeline: o.timeline,
           createdAt: o.createdAt
@@ -436,6 +437,52 @@ export const getCustomerOrders = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const createManualOrder = async (req, res) => {
+  try {
+    const {
+      customerName,
+      customerPhone,
+      customerEmail,
+      password,
+      address,
+      city,
+      state,
+      pincode,
+      quantity,
+      amountInRupees,
+      paymentReference,
+      paymentMethod,
+      sankalpamDetails
+    } = req.body;
+
+    const order = await orderService.createManualOrder({
+      customerName,
+      customerPhone,
+      customerEmail,
+      password,
+      address,
+      city,
+      state,
+      pincode,
+      quantity,
+      amountInRupees,
+      paymentReference,
+      paymentMethod,
+      sankalpamDetails,
+      adminUser: req.adminUser
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Manual booking ${order.orderNumber} created successfully for ${order.customer.name}!`,
+      data: order
+    });
+  } catch (err) {
+    console.error('[OrderController] Error creating manual order:', err);
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 

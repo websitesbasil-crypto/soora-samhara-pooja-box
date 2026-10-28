@@ -49,6 +49,14 @@ const CustomerSchema = new mongoose.Schema({
   lastOrderAt: {
     type: Date,
     default: null
+  },
+  resetPasswordOtp: {
+    type: String,
+    default: null
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true
