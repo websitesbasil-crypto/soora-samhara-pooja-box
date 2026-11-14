@@ -6,6 +6,7 @@ import { useCountdown } from '../../hooks/useCountdown';
 import TempleGopuramSketch from '../atoms/TempleGopuramSketch';
 import CornerDiyaAccent from '../atoms/CornerDiyaAccent';
 import HeroFlourish from '../atoms/HeroFlourish';
+import { Clock } from 'lucide-react';
 
 export const HeroSection = ({
   product,
@@ -103,20 +104,34 @@ export const HeroSection = ({
 
           {/* Right Column (approx 55%): Realistic Cinematic Pooja Box Display */}
           <div className="hero-product-stage">
-            <img
-              src={product?.imageUrl || "/hero-product-kit.png"}
-              alt="Sri Sankara TV Sathru Samhara Maha Yagam 2026 - Sanctified kit featuring Lord Murugan statue, 6 Arupadai vibhuti tins, rudraksh bracelet, chandan and final Yaagam box"
-              className="hero-box-img"
-              width="1024"
-              height="1152"
-              loading="eager"
-              onError={(e) => {
-                if (!e.target.dataset.triedFallback) {
-                  e.target.dataset.triedFallback = 'true';
-                  e.target.src = '/hero-product-kit.png';
-                }
-              }}
-            />
+            <div className="hero-image-wrapper">
+              <img
+                src={product?.imageUrl || "/hero-product-kit.png"}
+                alt="Sri Sankara TV Sathru Samhara Maha Yagam 2026 - Sanctified kit featuring Lord Murugan statue, 6 Arupadai vibhuti tins, rudraksh bracelet, chandan and final Yaagam box"
+                className="hero-box-img"
+                width="1024"
+                height="1152"
+                loading="eager"
+                onError={(e) => {
+                  if (!e.target.dataset.triedFallback) {
+                    e.target.dataset.triedFallback = 'true';
+                    e.target.src = '/hero-product-kit.png';
+                  }
+                }}
+              />
+
+              {/* Top-Right Corner Sankalpam Notice Band / Tag */}
+              <aside className="hero-corner-tag" aria-label="Sankalpam Registration Notice">
+                <div className="hero-corner-tag-badge">
+                  <Clock size={12} aria-hidden="true" />
+                  <span>Important Notice</span>
+                </div>
+                <p className="hero-corner-tag-text">
+                  Kindly note that any registrations made after <strong>10:00 AM</strong> will not have the devotee’s name included in the Sankalpam. However, the registration will still include the prasadam and its associated items.
+                </p>
+              </aside>
+            </div>
+
             <div className="hero-image-disclaimer">
               <p className="hero-disclaimer-en">Images are for representation purposes only. The actual product may differ.</p>
               <p className="hero-disclaimer-ta" lang="ta">படங்கள் விளக்கத்திற்காக மட்டுமே</p>
