@@ -43,15 +43,15 @@ export const HomePage = () => {
     fetchData();
   }, []);
 
-  const countdownTarget = settings.countdown_target_date || product?.eventDate || '2026-11-15T00:00:00+05:30';
+  const countdownTarget = settings.countdown_target_date || product?.eventDate || '2026-12-20T00:00:00+05:30';
 
   return (
     <>
       <HeroSection
         product={product}
         countdownDate={countdownTarget}
-        eventLocation={product?.eventLocation || 'Thiruttani'}
-        eventDateFormatted="15 November 2026"
+        eventLocation={product?.eventLocation || 'Tirupathi'}
+        eventDateFormatted={product?.eventDateFormatted || '20 December 2026'}
       />
       <ProductContents
         items={product?.contents}

@@ -13,55 +13,53 @@ export const seedDatabase = async () => {
 
   // 1. Seed or update Product
   let product = await Product.findOne({ slug: DEFAULT_PRODUCT.slug });
+  if (!product) {
+    product = await Product.findOne({ isActive: true });
+  }
   const productData = {
-    name: 'Sathru Samhara Maha Yagam',
+    name: 'Maha Sudarshana Yaagam',
     slug: DEFAULT_PRODUCT.slug,
-    tamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்',
-    description: ' A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering. ',
+    tamilTitle: 'மஹா சுதர்சன யாகம்',
+    description: 'Register your Sankalpam for the Maha Sudarshana Yaagam, a sacred Vedic fire ritual to Lord Sudarshana, the divine discus of Lord Maha Vishnu, performed by Sri Sankara TV in Tirupathi on the holy day of Vaikunta Ekadesi. Every registered devotee receives a special Sankalpam box of eight sacred items, dispatched by post to the registered address after the Yaagam.',
     priceInPaise: 250000, // ₹2,500.00
     currency: 'INR',
     minQuantity: 1,
     maxQuantity: 20,
     isActive: true,
-    eventDate: new Date('2026-11-15T00:00:00+05:30'),
-    eventLocation: 'Thiruttani',
+    eventDate: new Date('2026-12-20T00:00:00+05:30'),
+    eventLocation: 'Tirupathi',
     imageUrl: '/Luxury Maroon Murugan Pooja Kit.png',
     contents: [
-      { qty: '6×', title: 'Vibhuti from the Arupadai temples', description: 'One packet from each of the six abodes of Lord Murugan.' },
-      { qty: '1×', title: 'Murugan keepsake statue', description: 'Six inches tall, for your home altar.' },
-      { qty: '1×', title: 'Rudraksh bracelet', description: 'Rudraksh beads strung as a bracelet.' },
-      { qty: '1×', title: 'Chandan', description: 'For tilak and for your daily pooja.' },
-      { qty: '1×', title: 'Authentication certificate', description: 'Issued by Sri Sankara TV with your box.' }
+      { qty: '1×', title: 'Lord Sudarshana & Maha Vishnu Keepsake Idol', description: 'Sacred keepsake idol for your home pooja altar.' },
+      { qty: '3×', title: 'Sanctified Brass Prasadam Containers', description: 'Containers with holy offerings blessed during the Yaagam.' },
+      { qty: '1×', title: 'Sacred Raksha Thread', description: 'Infused with the protective vibrations of the Sudarshana Maha Mantra.' },
+      { qty: '1×', title: 'Sacred Vaikunta Angavastram / Pattu Vastram', description: 'Blessed silk vastram sanctified at the altar.' },
+      { qty: '1×', title: 'Authentication Certificate', description: 'Issued by Sri Sankara TV packed inside your box.' }
     ],
     temples: [
-      { ta: 'திருப்பரங்குன்றம்', en: 'Thiruparankundram', where: 'Madurai', isFinal: false, flag: null },
-      { ta: 'திருச்செந்தூர்', en: 'Thiruchendur', where: 'Thoothukudi', isFinal: false, flag: null },
-      { ta: 'பழனி', en: 'Palani', where: 'Dindigul', isFinal: false, flag: null },
-      { ta: 'சுவாமிமலை', en: 'Swamimalai', where: 'Thanjavur', isFinal: false, flag: null },
-      { ta: 'பழமுதிர்சோலை', en: 'Pazhamudhirsolai', where: 'Madurai', isFinal: false, flag: null },
-      { ta: 'திருத்தணி', en: 'Thiruttani', where: 'Tiruvallur', isFinal: true, flag: 'Final Yaagam · 15 November' }
+      { ta: 'திருப்பதி', en: 'Tirupathi', where: 'Andhra Pradesh', isFinal: true, flag: 'Maha Yaagam · 20 December' }
     ],
     certificateConfig: {
       authority: 'Sri Sankara TV',
       title: 'Authentication Certificate',
-      subtitle: 'Sathru Samhara Maha Yagam 2026',
-      sealText: 'வேல்',
+      subtitle: 'Maha Sudarshana Yaagam 2026',
+      sealText: 'ஓம்',
       caption: 'Illustration of the certificate. Final design may differ.',
       verificationPoints: [
-        'Vibhuti sourced from the six Arupadai temples',
-        'Box taken to the final Maha Yaagam at Thiruttani on 15 November',
+        'Sanctified items blessed at Tirupathi',
+        'Box sanctified at the grand Maha Sudarshana Yaagam at Tirupathi on 20 December',
         'Certificate issued by Sri Sankara TV, packed inside your box'
       ]
     },
     insideBoxConfig: {
       eyebrow: 'Inside the box',
       title: '',
-      description: 'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.'
+      description: 'Everything is packed as one box and sanctified for the divine Maha Sudarshana Yaagam in Tirupathi on 20 December 2026.'
     },
     contactConfig: {
       title: 'Contact Sri Sankara TV',
       tamilTitle: 'தொடர்புக்கு / உதவிக்கு',
-      description: 'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.',
+      description: 'For any queries regarding the sacred Maha Sudarshana Yaagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.',
       phone1: '95917 47001',
       phone2: '95917 47002',
       email: 'Srisankaratvshop@gmail.com',
@@ -74,22 +72,25 @@ export const seedDatabase = async () => {
   if (!product) {
     product = new Product(productData);
     await product.save();
-    console.log('[Seed] Created default Sathru Samhara Maha Yagam product.');
+    console.log('[Seed] Created default Maha Sudarshana Yaagam product.');
   } else {
     product.name = productData.name;
     product.tamilTitle = productData.tamilTitle;
     product.description = productData.description;
+    product.eventDate = productData.eventDate;
+    product.eventLocation = productData.eventLocation;
     if (product.certificateConfig) {
       product.certificateConfig.subtitle = productData.certificateConfig.subtitle;
+      product.certificateConfig.verificationPoints = productData.certificateConfig.verificationPoints;
     }
-    if (!product.insideBoxConfig) {
-      product.insideBoxConfig = productData.insideBoxConfig;
+    if (product.insideBoxConfig) {
+      product.insideBoxConfig.description = productData.insideBoxConfig.description;
     }
-    if (!product.contactConfig || !product.contactConfig.phone1) {
-      product.contactConfig = productData.contactConfig;
+    if (product.contactConfig) {
+      product.contactConfig.description = productData.contactConfig.description;
     }
     await product.save();
-    console.log('[Seed] Updated existing product to Sathru Samhara Maha Yagam.');
+    console.log('[Seed] Updated existing product to Maha Sudarshana Yaagam.');
   }
 
   // 2. Seed initial Super Admin
@@ -117,7 +118,7 @@ export const seedDatabase = async () => {
 
   // 3. Seed default Settings
   const defaultSettings = [
-    { key: 'countdown_target_date', value: '2026-11-15T00:00:00+05:30', category: 'EVENT', description: 'Countdown target date in ISO format', isPublic: true },
+    { key: 'countdown_target_date', value: '2026-12-20T00:00:00+05:30', category: 'EVENT', description: 'Countdown target date in ISO format', isPublic: true },
     { key: 'order_desk_whatsapp', value: '919840000000', category: 'CONTACT', description: 'WhatsApp order desk number with country code', isPublic: true },
     { key: 'support_phone', value: '+91 44 2498 0000', category: 'CONTACT', description: 'Support helpline phone number', isPublic: true },
     { key: 'support_email', value: 'orders@srisankaratv.com', category: 'CONTACT', description: 'Customer support email address', isPublic: true }
@@ -128,6 +129,10 @@ export const seedDatabase = async () => {
     if (!exists) {
       await Setting.create(s);
       console.log(`[Seed] Created setting: ${s.key}`);
+    } else if (s.key === 'countdown_target_date' && exists.value === '2026-11-15T00:00:00+05:30') {
+      exists.value = s.value;
+      await exists.save();
+      console.log(`[Seed] Updated setting: ${s.key} to ${s.value}`);
     }
   }
 

@@ -196,7 +196,7 @@ export const OrderForm = ({ product, settings }) => {
       : '';
 
     const lines = [
-      `${product?.name || 'Sathru Samhara Maha Yagam'} – order request`,
+      `${product?.name || 'Maha Sudarshana Yaagam'} – order request`,
       orderNum ? `Order Reference: ${orderNum}` : '',
       `Boxes: ${quantity}`,
       `Box total: ${inr(quantity * unitPrice)}`,
@@ -279,7 +279,7 @@ export const OrderForm = ({ product, settings }) => {
       amount: orderResponse.amountInPaise,
       currency: orderResponse.currency || 'INR',
       name: 'Sri Sankara TV',
-      description: `${product?.name || 'Sathru Samhara Maha Yagam'} (${quantity} box${quantity > 1 ? 'es' : ''})`,
+      description: `${product?.name || 'Maha Sudarshana Yaagam'} (${quantity} box${quantity > 1 ? 'es' : ''})`,
       orderId: orderResponse.razorpayOrderId,
       prefill: {
         name: formData.name,
@@ -340,10 +340,10 @@ export const OrderForm = ({ product, settings }) => {
           <Eyebrow>Reserve your box</Eyebrow>
           <Title>One box, {inr(unitPrice)}</Title>
           <Lede>
-            Choose how many boxes you want and share your delivery details. One standard box for every devotee, with the same contents.
+            Share your Sankalpam and postal details to register. Every devotee receives the same Sankalpam box of eight sacred items, dispatched by post after the Maha Sudarshana Yaagam.
           </Lede>
           <OrderSummary
-            productName={product?.name || 'Sathru Samhara Maha Yagam'}
+            productName={product?.name || 'Maha Sudarshana Yaagam'}
             quantity={quantity}
             unitPrice={unitPrice}
           />
@@ -376,7 +376,7 @@ export const OrderForm = ({ product, settings }) => {
                 Devotee Sign In Required
               </h3>
               <p style={{ color: 'var(--muted)', fontSize: '0.95rem', maxWidth: '44ch', margin: '0 auto 24px', lineHeight: 1.6 }}>
-                Lord Murugan’s {product?.name || 'Sathru Samhara Maha Yagam'} is blessed in your name. Please sign in or create an account with your mobile number, email, and password to place your order.
+                Lord Sudarshana’s {product?.name || 'Maha Sudarshana Yaagam'} is blessed in your name. Please sign in or create an account with your mobile number, email, and password to place your order.
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
                 <Button

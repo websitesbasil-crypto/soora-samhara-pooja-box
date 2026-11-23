@@ -4,8 +4,8 @@ import { CertificateCard } from '../molecules/CertificateCard';
 
 export const CertificateSection = ({ config, productName }) => {
   const points = config?.verificationPoints || [
-    'Vibhuti sourced from the six Arupadai temples',
-    'Box taken to the final Yaagam at Thiruttani on 15 November',
+    'Sanctified items blessed at Tirupathi',
+    'Box sanctified at the grand Maha Sudarshana Yaagam at Tirupathi on 20 December',
     'Certificate issued by Sri Sankara TV, packed inside your box'
   ];
 
@@ -15,15 +15,17 @@ export const CertificateSection = ({ config, productName }) => {
         <CertificateCard
           authority={config?.authority || 'Sri Sankara TV'}
           title={config?.title || 'Authentication Certificate'}
-          subtitle={config?.subtitle || (productName ? `${productName} 2026` : 'Sathru Samhara Maha Yagam 2026')}
-          sealText={config?.sealText || 'வேல்'}
+          subtitle={config?.subtitle || (productName ? `${productName} 2026` : 'Maha Sudarshana Yaagam 2026')}
+          sealText={config?.sealText || 'ஓம்'}
           caption={config?.caption || 'Illustration of the certificate. Final design may differ.'}
         />
         <div>
           <Eyebrow>Proof that it is genuine</Eyebrow>
-          <Title>Every box carries a certificate</Title>
+          <Title>The divine significance of Vaikunta Ekadesi</Title>
           <Lede>
-            This is no ordinary offering. Your sacred box accompanies the divine pilgrimage to all six Arupadai Veedu and the Sathru Samhara Maha Yagam at Thiruttani, arriving with an authentication certificate that honours its sacred journey.
+            Vaikunta Ekadesi is one of the most sacred observances dedicated to Lord Maha Vishnu. Especially cherished in Vaishnavite tradition, it is a day of devotion, spiritual purification, surrender to the Lord and the aspiration for moksha. On this day, the Vaikunta Dwaram, or Paramapada Vasal, is opened in many Vishnu temples.
+
+            Performing the Maha Sudarshana Yaagam on this day brings two devotional traditions together:
           </Lede>
           <ul className="checks">
             {points.map((point, index) => (

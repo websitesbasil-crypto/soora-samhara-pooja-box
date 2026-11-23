@@ -47,10 +47,10 @@ export const PaymentResultPage = () => {
               </div>
               <p className="eyebrow" style={{ color: 'var(--gold)' }}>Payment Confirmed</p>
               <h1 style={{ fontFamily: 'var(--font-display)', color: 'var(--head)', fontSize: '2rem', marginTop: 8 }}>
-                Vetrivel Muruganukku Harohara
+                Om Namo Venkatesaya
               </h1>
               <p className="lede" style={{ margin: '14px auto 24px', maxWidth: 480 }}>
-                Thank you for reserving the sacred <strong>Sathru Samhara Maha Yagam 2026</strong>. Your transaction has been verified.
+                Thank you for reserving the sacred <strong>Maha Sudarshana Yaagam 2026</strong>. Your transaction has been verified.
               </p>
 
               {orderDetails && (
@@ -89,7 +89,7 @@ export const PaymentResultPage = () => {
               )}
 
               <p style={{ fontSize: '0.92rem', color: 'var(--muted)', marginBottom: 28 }}>
-                The pooja box will travel to all six Arupadai temples and the final Yaagam at Thiruttani on 15 November 2026, and will be dispatched to your address along with the official Sri Sankara TV certificate.
+                The pooja box will be sanctified at the grand Maha Sudarshana Yaagam at Tirupathi on 20 December 2026, and will be dispatched to your address along with the official Sri Sankara TV certificate.
               </p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>

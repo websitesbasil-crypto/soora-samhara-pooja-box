@@ -598,7 +598,7 @@ export const ContentPage = () => {
                 rows={3}
                 value={product.contactConfig?.description || ''}
                 onChange={(e) => setContent({ ...content, product: { ...product, contactConfig: { ...product.contactConfig, description: e.target.value } } })}
-                placeholder="For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box..."
+                placeholder="For any queries regarding the sacred Maha Sudarshana Yaagam Pooja Box..."
               />
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>

@@ -36,24 +36,24 @@ export const EMAIL_TEMPLATES = {
 };
 
 export const DEFAULT_PRODUCT = {
-  name: 'Sathru Samhara Maha Yagam',
+  name: 'Maha Sudarshana Yaagam',
   slug: 'soora-samhara-pooja-box-2026',
   priceInPaise: 250000, // ₹2,500
   currency: 'INR',
   maxQuantityPerOrder: 20,
   minQuantityPerOrder: 1,
-  eventDate: '2026-11-15T00:00:00+05:30',
-  eventLocation: 'Thiruttani',
-  eventTamilTitle: 'சத்ரு சம்ஹார மஹா யாகம்',
+  eventDate: '2026-12-20T00:00:00+05:30',
+  eventLocation: 'Tirupathi',
+  eventTamilTitle: 'மஹா சுதர்சன யாகம்',
   insideBoxConfig: {
     eyebrow: 'Inside the box',
     title: '',
-    description: 'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.'
+    description: 'Everything is packed as one box and sanctified for the divine Maha Sudarshana Yaagam in Tirupathi on 20 December 2026.'
   },
   contactConfig: {
     title: 'Contact Sri Sankara TV',
     tamilTitle: 'தொடர்புக்கு / உதவிக்கு',
-    description: 'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.',
+    description: 'For any queries regarding the sacred Maha Sudarshana Yaagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.',
     phone1: '95917 47001',
     phone2: '95917 47002',
     email: 'Srisankaratvshop@gmail.com',

@@ -234,7 +234,7 @@ export const AuthModal = () => {
             {mode === 'reset' && 'Enter Verification Code'}
           </h2>
           <p style={{ fontSize: '0.84rem', color: '#D8C3A5', marginTop: 6 }}>
-            {mode === 'login' && 'Sign in to reserve and track your blessed Sathru Samhara Maha Yagam.'}
+            {mode === 'login' && 'Sign in to reserve and track your blessed Maha Sudarshana Yaagam.'}
             {mode === 'register' && 'Sign up with your email, mobile number and password to place your order.'}
             {mode === 'forgot' && 'Enter your registered email address or mobile number to receive a 6-digit verification code.'}
             {mode === 'reset' && (maskedEmail ? `Enter the 6-digit code sent to ${maskedEmail} and choose a new password.` : 'Enter the 6-digit code sent to your email.')}

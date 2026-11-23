@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const PriceDisplay = ({ amountInRupees = 2500, note = 'per box, one standard box' }) => {
+export const PriceDisplay = ({ amountInRupees = 2500, note = 'per Sankalpam, with one Sankalpam box' }) => {
   const formatted = `₹${amountInRupees.toLocaleString('en-IN')}`;
 
   return (

@@ -20,7 +20,7 @@ export const getPublicProduct = async (req, res) => {
           name: DEFAULT_PRODUCT.name,
           slug: DEFAULT_PRODUCT.slug,
           tamilTitle: DEFAULT_PRODUCT.eventTamilTitle,
-          description: 'A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering.',
+          description: 'Register your Sankalpam for the Maha Sudarshana Yaagam, a sacred Vedic fire ritual to Lord Sudarshana, the divine discus of Lord Maha Vishnu, performed by Sri Sankara TV in Tirupathi on the holy day of Vaikunta Ekadesi. Every registered devotee receives a special Sankalpam box of eight sacred items, dispatched by post to the registered address after the Yaagam.',
           priceInPaise: DEFAULT_PRODUCT.priceInPaise,
           priceInRupees: DEFAULT_PRODUCT.priceInPaise / 100,
           currency: DEFAULT_PRODUCT.currency,

@@ -10,7 +10,7 @@ export const paymentService = {
     amount,
     currency = 'INR',
     name = 'Sri Sankara TV',
-    description = 'Sathru Samhara Maha Yagam 2026',
+    description = 'Maha Sudarshana Yaagam 2026',
     orderId,
     prefill = {},
     theme = { color: '#2F0A12' },

@@ -17,7 +17,7 @@ const TempleSchema = new mongoose.Schema({
 const ProductSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   slug: { type: String, required: true, unique: true, index: true, lowercase: true, trim: true },
-  tamilTitle: { type: String, default: 'சத்ரு சம்ஹார மஹா யாகம்' },
+  tamilTitle: { type: String, default: 'மஹா சுதர்சன யாகம்' },
   description: { type: String, required: true },
   priceInPaise: { type: Number, required: true, min: 0 }, // e.g. 250000 = ₹2,500.00
   currency: { type: String, default: 'INR', uppercase: true },
@@ -26,8 +26,8 @@ const ProductSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true, index: true },
   stockCapacity: { type: Number, default: null }, // null = unlimited
   reservedCount: { type: Number, default: 0 },
-  eventDate: { type: Date, default: new Date('2026-11-15T00:00:00+05:30') },
-  eventLocation: { type: String, default: 'Thiruttani' },
+  eventDate: { type: Date, default: new Date('2026-12-20T00:00:00+05:30') },
+  eventLocation: { type: String, default: 'Tirupathi' },
   imageUrl: { type: String, default: '/hero-product-kit.png' },
   contents: [ProductContentSchema],
   insideBoxConfig: {
@@ -35,21 +35,21 @@ const ProductSchema = new mongoose.Schema({
     title: { type: String, default: '' },
     description: {
       type: String,
-      default: 'Everything is packed as one box and travels together from temple to temple, ending at the Maha Yaagam in Thiruttani.'
+      default: 'Everything is packed as one box and sanctified for the divine Maha Sudarshana Yaagam in Tirupathi on 20 December 2026.'
     }
   },
   temples: [TempleSchema],
   certificateConfig: {
     authority: { type: String, default: 'Sri Sankara TV' },
     title: { type: String, default: 'Authentication Certificate' },
-    subtitle: { type: String, default: 'Sathru Samhara Maha Yagam 2026' },
-    sealText: { type: String, default: 'வேல்' },
+    subtitle: { type: String, default: 'Maha Sudarshana Yaagam 2026' },
+    sealText: { type: String, default: 'ஓம்' },
     caption: { type: String, default: 'Illustration of the certificate. Final design may differ.' },
     verificationPoints: {
       type: [String],
       default: [
-        'Vibhuti sourced from the six Arupadai temples',
-        'Box taken to the final Maha Yaagam at Thiruttani on 15 November',
+        'Sanctified items blessed at Tirupathi',
+        'Box sanctified at the grand Maha Sudarshana Yaagam at Tirupathi on 20 December',
         'Certificate issued by Sri Sankara TV, packed inside your box'
       ]
     }
@@ -59,7 +59,7 @@ const ProductSchema = new mongoose.Schema({
     tamilTitle: { type: String, default: 'தொடர்புக்கு / உதவிக்கு' },
     description: {
       type: String,
-      default: 'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.'
+      default: 'For any queries regarding the sacred Maha Sudarshana Yaagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.'
     },
     phone1: { type: String, default: '95917 47001' },
     phone2: { type: String, default: '95917 47002' },

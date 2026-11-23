@@ -9,9 +9,11 @@ export const TempleJourney = ({ temples = [] }) => {
     <section className="band temples" id="temples">
       <div className="wrap">
         <Eyebrow>The journey</Eyebrow>
-        <Title>Six temples, one Maha Yaagam</Title>
+        <Title>What is Maha Sudarshana Yaagam?</Title>
         <Lede>
-          The sacred box journeys through all six Arupadai Veedu, culminating in the divine grace of the Sathru Samhara Maha Yagam
+          Maha Sudarshana Yaagam is a sacred Vedic fire ritual dedicated to Lord Sudarshana, the divine discus of Lord Maha Vishnu. In Hindu tradition, Lord Sudarshana represents divine protection, righteousness, spiritual illumination and the destruction of negative influences.
+
+          The Yaagam is performed with sacred mantras, offerings into the homa fire and prayers invoking the blessings of Lord Sudarshana. Devotees traditionally take part seeking these blessings:
         </Lede>
         <div className="temple-grid">
           {templeList.length === 0 ? (

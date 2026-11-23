@@ -6,13 +6,13 @@ import { useCountdown } from '../../hooks/useCountdown';
 import TempleGopuramSketch from '../atoms/TempleGopuramSketch';
 import CornerDiyaAccent from '../atoms/CornerDiyaAccent';
 import HeroFlourish from '../atoms/HeroFlourish';
-import { Clock } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 export const HeroSection = ({
   product,
-  countdownDate = '2026-11-15T00:00:00+05:30',
-  eventLocation = 'Thiruttani',
-  eventDateFormatted = '15 November 2026'
+  countdownDate = '2026-12-20T00:00:00+05:30',
+  eventLocation = 'Tirupathi',
+  eventDateFormatted = '20 December 2026'
 }) => {
   const { label } = useCountdown(countdownDate);
   const priceInRupees = product?.priceInPaise ? product.priceInPaise / 100 : 2500;
@@ -38,11 +38,11 @@ export const HeroSection = ({
         <div className="hero-grid">
           {/* Left Column (approx 45%): Editorial Devotional Typography & Actions */}
           <div className="hero-content">
-            <Eyebrow>Arupadai Veedu · Sathru Samhara 2026</Eyebrow>
-            <TamilText>{product?.tamilTitle || 'சத்ரு சம்ஹார மகா யாகம்'}</TamilText>
+            <Eyebrow>Vaikunta Ekadesi · Tirupathi 2026</Eyebrow>
+            <TamilText>{product?.tamilTitle || 'மஹா சுதர்சன யாகம்'}</TamilText>
             <h1 className="hero-heading">
               {(() => {
-                const name = product?.name || 'Sathru Samhara Maha Yagam';
+                const name = product?.name || 'Maha Sudarshana Yaagam';
                 if (name.includes('\n')) {
                   return name.split('\n').map((line, idx) => (
                     <span key={idx} style={{ display: 'block' }}>{line}</span>
@@ -70,10 +70,10 @@ export const HeroSection = ({
               })()}
             </h1>
             <p className="hero-sub">
-              {product?.description || "A sacred collection blessed by the divine grace of Lord Murugan, featuring holy vibhuti from all six Arupadai Veedu temples, a Murugan keepsake idol, a rudraksha bracelet, and sacred chandan. Accompanying the divine journey across all six abodes of Lord Murugan, the box will reach the grand Yaagam at Thiruttani on 15 November, carrying the sanctity of this spiritual pilgrimage to your home. Each box comes with an authentication certificate, preserving the sacred significance of this divine offering."}
+              {product?.description || "Register your Sankalpam for the Maha Sudarshana Yaagam, a sacred Vedic fire ritual to Lord Sudarshana, the divine discus of Lord Maha Vishnu, performed by Sri Sankara TV in Tirupathi on the holy day of Vaikunta Ekadesi. Every registered devotee receives a special Sankalpam box of eight sacred items, dispatched by post to the registered address after the Yaagam."}
             </p>
 
-            <PriceDisplay amountInRupees={priceInRupees} note="per box, one standard box" />
+            <PriceDisplay amountInRupees={priceInRupees} note="per Sankalpam, with one Sankalpam box" />
 
             <div className="cta-row">
               <Button onClick={() => scrollTo('order')} href="#order" className="btn-hero-primary">
@@ -106,8 +106,8 @@ export const HeroSection = ({
           <div className="hero-product-stage">
             <div className="hero-image-wrapper">
               <img
-                src={product?.imageUrl || "/hero-product-kit.png"}
-                alt="Sri Sankara TV Sathru Samhara Maha Yagam 2026 - Sanctified kit featuring Lord Murugan statue, 6 Arupadai vibhuti tins, rudraksh bracelet, chandan and final Yaagam box"
+                src={product?.imageUrl || "/Luxury Maroon Murugan Pooja Kit.png"}
+                alt="Sri Sankara TV Maha Sudarshana Yaagam 2026 - Sanctified kit featuring Lord Venkateswara idol, vastram, brass pots, and sacred raksha"
                 className="hero-box-img"
                 width="1024"
                 height="1152"
@@ -120,14 +120,14 @@ export const HeroSection = ({
                 }}
               />
 
-              {/* Top-Right Corner Sankalpam Notice Band / Tag */}
-              <aside className="hero-corner-tag" aria-label="Sankalpam Registration Notice">
+              {/* Top-Right Corner Venue Notice Band / Tag */}
+              <aside className="hero-corner-tag" aria-label="Venue Notice">
                 <div className="hero-corner-tag-badge">
-                  <Clock size={12} aria-hidden="true" />
-                  <span>Important Notice</span>
+                  <MapPin size={12} aria-hidden="true" />
+                  <span>VENUE</span>
                 </div>
                 <p className="hero-corner-tag-text">
-                  Kindly note that any registrations made after <strong>10:00 AM</strong> will not have the devotee’s name included in the Sankalpam. However, the registration will still include the prasadam and its associated items.
+                  <strong>Venue:</strong> Kalyana Mandapam, Tirupathi. Exact venue details will be announced soon.
                 </p>
               </aside>
             </div>

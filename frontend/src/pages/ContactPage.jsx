@@ -113,7 +113,7 @@ export const ContactPage = () => {
   const tamilTitle = contactData?.tamilTitle || 'தொடர்புக்கு / உதவிக்கு';
   const mainTitle = contactData?.title || 'Contact Sri Sankara TV';
   const description = contactData?.description ||
-    'For any queries regarding the sacred Sathru Samhara Maha Yagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.';
+    'For any queries regarding the sacred Maha Sudarshana Yaagam Pooja Box, booking assistance, temple travels, or delivery inquiries, our devotional care team is available to assist you.';
   const phone1 = contactData?.phone1 || '95917 47001';
   const phone2 = contactData?.phone2 || '95917 47002';
   const email = contactData?.email || 'Srisankaratvshop@gmail.com';
@@ -284,7 +284,7 @@ export const ContactPage = () => {
               </a>
 
               <a
-                href={`https://wa.me/${p1Digits.startsWith('91') ? p1Digits : `91${p1Digits}`}?text=${encodeURIComponent('Vanakkam, I have an inquiry regarding the Sathru Samhara Maha Yagam Pooja Box.')}`}
+                href={`https://wa.me/${p1Digits.startsWith('91') ? p1Digits : `91${p1Digits}`}?text=${encodeURIComponent('Vanakkam, I have an inquiry regarding the Maha Sudarshana Yaagam Pooja Box.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -397,7 +397,7 @@ export const ContactPage = () => {
               </a>
 
               <a
-                href={`https://wa.me/${p2Digits.startsWith('91') ? p2Digits : `91${p2Digits}`}?text=${encodeURIComponent('Vanakkam, I have an inquiry regarding the Sathru Samhara Maha Yagam Pooja Box.')}`}
+                href={`https://wa.me/${p2Digits.startsWith('91') ? p2Digits : `91${p2Digits}`}?text=${encodeURIComponent('Vanakkam, I have an inquiry regarding the Maha Sudarshana Yaagam Pooja Box.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -815,7 +815,7 @@ export const ContactPage = () => {
               transition: 'all 0.25s ease'
             }}
           >
-            <span>Book Sathru Samhara Maha Yagam Pooja Box</span>
+            <span>Book Maha Sudarshana Yaagam Pooja Box</span>
             <ArrowRight size={18} />
           </Link>
         </div>
